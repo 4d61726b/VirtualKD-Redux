@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{6416163a-fcda-4d76-9d26-650a9898e2b6}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{a8fa4f4f-77ad-4615-bc79-1de4a562d9cb}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{4f00ce11-dd0d-4b36-9053-74a2a97f8782}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\kdvm\kdvm.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\kdvm\kdrpc.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\kdvm\kdvm.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\kdvm\kdxxx.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\kdvm\vboxrpc.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualDDKHelpers.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\kdvm\vmwrpc.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\kdvm\vboxrpc64.asm">
+      <Filter>Source files</Filter>
+    </MASM>
+    <MASM Include="..\kdvm\vmwrpc64.asm">
+      <Filter>Source files</Filter>
+    </MASM>
+  </ItemGroup>
+</Project>

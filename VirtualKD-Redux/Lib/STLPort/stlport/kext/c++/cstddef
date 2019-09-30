@@ -1,0 +1,5 @@
+//#include "stddef.h"
+#include <sys/types.h>
+typedef __darwin_ptrdiff_t ptrdiff_t;
+typedef __darwin_wint_t wint_t;
+

@@ -1,0 +1,12 @@
+# -*- makefile -*- Time-stamp: <04/05/01 00:34:42 ptr>
+# $Id: evc-common.mak,v 1.2 2008-02-26 14:59:43 bazis Exp $
+
+# defines missing in this file: LDFLAGS_COMMON
+
+!ifndef LDLIBS
+LDLIBS =
+!endif
+
+LDFLAGS_REL = $(LDFLAGS_REL) /DLL $(LDSEARCH) $(LDFLAGS_COMMON) /VERSION:$(MAJOR).$(MINOR)
+LDFLAGS_DBG = $(LDFLAGS_DBG) /DLL $(LDSEARCH) $(LDFLAGS_COMMON) /VERSION:$(MAJOR).$(MINOR)
+LDFLAGS_STLDBG = $(LDFLAGS_STLDBG) /DLL $(LDSEARCH) $(LDFLAGS_COMMON) /VERSION:$(MAJOR).$(MINOR)
