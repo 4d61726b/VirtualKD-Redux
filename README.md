@@ -5,8 +5,9 @@ VirtualKD-Redux is a fork of Sysprogs' VirtualKD.
 ## Features
 
 * Support for the latest VMware Workstation (Currently 15.5.0)
+* Support for the latest Windows 10 (Currently 1903)
 * Toolchain modernization. Builds with Visual Studio 2017
-* Greatly simplified build system
+* Significantly simplified the build system
 
 ## Build Instructions
 ### Prerequisites
