@@ -9,6 +9,10 @@ VirtualKD-Redux is a fork of Sysprogs' VirtualKD.
 * Toolchain modernization. Builds with Visual Studio 2017
 * Significantly simplified the build system
 
+## Downloads
+
+[Download the latest VirtualKD-Redux release](https://github.com/4d61726b/VirtualKD-Redux/releases)
+
 ## Build Instructions
 ### Prerequisites
 * Visual Studio 2017
