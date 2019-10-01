@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" InitialTargets="CheckEnvironment" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\FindBazisLib.props" />
-  <Target Name="CheckEnvironment">
-    <Error Condition="(!exists('$(WDK_PATH)\include\km')) and (('$(Configuration)'=='Debug (WinKernel)') or ('$(Configuration)'=='Release (WinKernel)'))" Text="The WDK_PATH environment variable is missing or does not point at Windows 8.x Driver Kit" />
-    <Error Condition="(!exists('$(WDK7_PATH)\inc\ddk')) and (('$(Configuration)'=='Debug (WinKernel-WDK7)') or ('$(Configuration)'=='Release (WinKernel-WDK7)'))" Text="The WDK7_PATH environment variable is missing or does not point at Windows Driver Kit 7.1.0" />
-  </Target>
+
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug-UserMode|Win32">
       <Configuration>Debug-UserMode</Configuration>
@@ -30,6 +26,7 @@
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(SolutionDir)\VirtualKD-Redux.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-UserMode|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -60,93 +57,40 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-UserMode|Win32'">
-    <IncludePath>$(BZSLIB_PATH)\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\$(ProjectName)\intermediate\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-UserMode|Win32'">
-    <IncludePath>$(BZSLIB_PATH)\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\$(ProjectName)\intermediate\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug-UserMode|x64'">
-    <IncludePath>$(BZSLIB_PATH)\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\$(ProjectName)\intermediate\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-UserMode|x64'">
-    <IncludePath>$(BZSLIB_PATH)\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\$(ProjectName)\intermediate\</IntDir>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-UserMode|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-UserMode|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-UserMode|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release-UserMode|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -239,12 +183,7 @@
     <ClCompile Include="Posix\kext.cpp" />
     <ClCompile Include="Posix\posix_path.cpp" />
     <ClCompile Include="Posix\posix_status.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-UserMode|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-UserMode|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release-UserMode|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release-UserMode|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Win32\path.cpp" />
     <ClCompile Include="Win32\registry_win32.cpp" />
     <ClCompile Include="Win32\security.cpp" />

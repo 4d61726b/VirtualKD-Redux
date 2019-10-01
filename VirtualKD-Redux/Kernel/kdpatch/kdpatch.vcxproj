@@ -300,7 +300,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\BazisLib\bzscore\bzscore.vcxproj">
+    <ProjectReference Include="..\..\Lib\BazisLib\bzscore\bzscore-kernel.vcxproj">
       <Project>{a009693f-aadd-42cf-8e6e-f7bbf5601e5c}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Lib\BazisLib\bzshlp\bzshlp.vcxproj">

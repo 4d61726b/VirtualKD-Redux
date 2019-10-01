@@ -1,10 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" InitialTargets="CheckEnvironment" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\FindBazisLib.props" />
-  <Target Name="CheckEnvironment">
-    <Error Condition="(!exists('$(WDK_PATH)\include\km')) and (('$(Configuration)'=='Debug (WinKernel)') or ('$(Configuration)'=='Release (WinKernel)'))" Text="The WDK_PATH environment variable is missing or does not point at Windows 8.x Driver Kit" />
-    <Error Condition="(!exists('$(WDK7_PATH)\inc\ddk')) and (('$(Configuration)'=='Debug (WinKernel-WDK7)') or ('$(Configuration)'=='Release (WinKernel-WDK7)'))" Text="The WDK7_PATH environment variable is missing or does not point at Windows Driver Kit 7.1.0" />
-  </Target>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug-WinKernel-WDK7|Win32">
       <Configuration>Debug-WinKernel-WDK7</Configuration>

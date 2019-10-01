@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
+  <Target Name="CheckEnvironment">
+    <Error Condition="(!exists('$(WDK_PATH)\include\km')) and (('$(Configuration)'=='Debug (WinKernel)') or ('$(Configuration)'=='Release (WinKernel)'))" Text="The WDK_PATH environment variable is missing or does not point at Windows 8.x Driver Kit" />
+    <Error Condition="(!exists('$(WDK7_PATH)\inc\ddk')) and (('$(Configuration)'=='Debug (WinKernel-WDK7)') or ('$(Configuration)'=='Release (WinKernel-WDK7)'))" Text="The WDK7_PATH environment variable is missing or does not point at Windows Driver Kit 7.1.0" />
+  </Target>
   <PropertyGroup>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\$(ProjectName)\intermediate\</IntDir>
@@ -12,7 +16,8 @@
   <ItemDefinitionGroup>
     <ClCompile>
         <WarningLevel>Level3</WarningLevel>
-        <AdditionalIncludeDirectories>$(WDK7_PATH)\inc\ddk;$(WDK7_PATH)\inc\api;$(WDK7_PATH)\inc\crt;$(SolutionDir)Lib\STLPort\stlport;$(SolutionDir)Lib\BazisLib\;$(SolutionDir)Lib</AdditionalIncludeDirectories>
+        <AdditionalIncludeDirectories Condition="$(ProjectName.EndsWith('-kernel'))">$(WDK7_PATH)\inc\ddk;$(WDK7_PATH)\inc\api;$(WDK7_PATH)\inc\crt;$(SolutionDir)Lib\STLPort\stlport;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+        <AdditionalIncludeDirectories>$(SolutionDir)Lib\BazisLib\;$(SolutionDir)Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
