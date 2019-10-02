@@ -94,7 +94,7 @@ namespace BazisLib
 				if (IncludeCurlyBrackets)
 				{
 					TCHAR tszGuid[40];
-					_sntprintf(tszGuid, __countof(tszGuid), _T("{%s}"), pGuid);
+					_sntprintf(tszGuid, __countof(tszGuid), _T("{%s}"), (TCHAR*)pGuid);
 					RpcStringFree(&pGuid);
 					return tszGuid;
 				}

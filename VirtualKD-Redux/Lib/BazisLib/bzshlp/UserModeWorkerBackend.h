@@ -1,7 +1,7 @@
 #pragma once
-#include <bzscore/status.h>
-#include <bzscore/buffer.h>
-#include <bzscore/sync.h>
+#include <BazisLib/bzscore/status.h>
+#include <BazisLib/bzscore/buffer.h>
+#include <BazisLib/bzscore/sync.h>
 
 namespace BazisLib
 {

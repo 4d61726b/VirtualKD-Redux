@@ -4,7 +4,7 @@
 //
 
 #pragma once
-#if defined(WIN32) && !defined(BZSLIB_WINKERNEL)
+#if defined(WIN32) && (!defined(BZSLIB_WINKERNEL) && !defined(_DDK_))
 
 #ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
 #define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
@@ -17,5 +17,6 @@
 
 #include <windows.h>
 #include <tchar.h>
-
+#else
+#include "../stdafx.h"
 #endif

@@ -1,1 +1,0 @@
-"%WDKPATH%\bin\x86\signtool.exe" sign /i Testsigning /t http://timestamp.verisign.com/scripts/timstamp.dll %1

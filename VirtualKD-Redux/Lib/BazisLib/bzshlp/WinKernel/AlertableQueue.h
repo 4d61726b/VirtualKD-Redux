@@ -1,7 +1,7 @@
 #pragma once
 #include <queue>
-#include <bzscore/sync.h>
-#include <bzscore/objmgr.h>
+#include <BazisLib/bzscore/sync.h>
+#include <BazisLib/bzscore/objmgr.h>
 
 namespace BazisLib
 {

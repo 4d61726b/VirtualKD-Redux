@@ -1,6 +1,6 @@
 #pragma once
 
-#if !defined(_WINDOWS_) && !defined(__WINDOWS__)
+#if !defined(_WINDOWS_) && !defined(__WINDOWS__) && !defined(_DDK_)
 #error You should include WINDOWS.H before including BZSWIN headers
 #endif
 

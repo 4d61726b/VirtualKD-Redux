@@ -303,7 +303,7 @@
     <ProjectReference Include="..\..\Lib\BazisLib\bzscore\bzscore-kernel.vcxproj">
       <Project>{a009693f-aadd-42cf-8e6e-f7bbf5601e5c}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Lib\BazisLib\bzshlp\bzshlp.vcxproj">
+    <ProjectReference Include="..\..\Lib\BazisLib\bzshlp\bzshlp-kernel.vcxproj">
       <Project>{443b5c7d-6675-4a16-a297-e8653eee39ad}</Project>
     </ProjectReference>
     <ProjectReference Include="..\kdvmguestlib\kdvmguestlib.vcxproj">

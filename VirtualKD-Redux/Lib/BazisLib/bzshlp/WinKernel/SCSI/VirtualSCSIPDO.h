@@ -4,7 +4,7 @@
 #include "../bus.h"
 #include <mountdev.h>
 #include <ntddscsi.h>
-#include <bzscore/buffer.h>
+#include <Bazislib/bzscore/buffer.h>
 
 typedef struct _KAPC_STATE {
 	LIST_ENTRY ApcListHead[MaximumMode];

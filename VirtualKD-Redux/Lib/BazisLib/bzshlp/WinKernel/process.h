@@ -1,5 +1,5 @@
 #pragma once
-#include <bzscore/status.h>
+#include <Bazislib/bzscore/status.h>
 
 #pragma region Undocumented API
 extern "C" 

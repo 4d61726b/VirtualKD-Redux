@@ -4,8 +4,8 @@
 #define COPYRIGHT_STR			"LGPL"
 #define TRADEMARKS_STR			"VirtualKD-Redux"
 #define PRODUCTNAME_STR			"VirtualKD-Redux"
-#define COMPANY_STR				"Sysprogs OU"
-#define COMMENTS_STR			"http://virtualkd.sysprogs.org/"
+#define COMPANY_STR				"VirtualKD-Redux"
+#define COMMENTS_STR			"https://github.com/4d61726b/VirtualKD-Redux"
 #define VIRTUALKD_VER_INT		0x7e300000
 
 #define KDCLIENT_DLL_VER_STR	VIRTUALKD_VERSION_STR
