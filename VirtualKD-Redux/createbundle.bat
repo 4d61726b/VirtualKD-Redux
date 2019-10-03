@@ -1,7 +1,7 @@
 mkdir Bundle
 copy Build\Win32\Release\kdclient32.dll Bundle\
 copy Build\x64\Release\kdclient64.dll Bundle\
-copy Build\Win32\Release\vmmon.exe Bundle\
+copy Build\Win32\Release\vmmon32.exe Bundle\
 copy Build\x64\Release\vmmon64.exe Bundle\
 copy Build\Win32\Release\vmxpatch.exe Bundle\
 copy Build\x64\Release\vmxpatch64.exe Bundle\
