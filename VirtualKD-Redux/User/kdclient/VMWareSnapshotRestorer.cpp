@@ -18,7 +18,7 @@ HRESULT StartRevertingCurrentVMToLastSnapshot_VMWare()
 	if (len < 6)
 		return E_FAIL;
 
-	if (!memicmp(tszDll + len - 6, L"64.dll", 12))
+	if (!_memicmp(tszDll + len - 6, L"64.dll", 12))
 		memcpy(tszDll + len - 6, L".dll", 10);
 
 
@@ -33,7 +33,7 @@ HRESULT StartRevertingCurrentVMToLastSnapshot_VMWare()
 		size_t len = wcslen(pArg);
 		if (len < 4)
 			continue;
-		if (memicmp(pArg + len - 4, L".vmx", 8))
+		if (_memicmp(pArg + len - 4, L".vmx", 8))
 			continue;
 		
 		vmFile = pArg;
