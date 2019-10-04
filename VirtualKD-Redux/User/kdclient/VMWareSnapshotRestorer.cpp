@@ -14,7 +14,7 @@ HRESULT StartRevertingCurrentVMToLastSnapshot_VMWare()
 	TCHAR tszDll[MAX_PATH];
 	GetModuleFileName(g_hThisDll, tszDll, _countof(tszDll));
 
-	int len = _tcslen(tszDll);
+	size_t len = _tcslen(tszDll);
 	if (len < 6)
 		return E_FAIL;
 

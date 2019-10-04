@@ -71,7 +71,7 @@ size_t TCPSocket::Send(const void *pBuffer, size_t length, int rawFlags)
 			m_pLogFile->Write(pBuffer, length);
 	}
 #endif
-	return send(m_Socket, (const char *)pBuffer, length, rawFlags);
+	return send(m_Socket, (const char *)pBuffer, (int)length, rawFlags);
 }
 
 size_t TCPSocket::Recv(void *pBuffer, size_t length, bool waitUntilEntireBuffer, int rawFlags)
@@ -103,12 +103,12 @@ ActionStatus TCPSocket::Connect(const BazisLib::Network::InternetAddress &addres
 	}
 	if (addressToBind.Valid())
 	{
-		int err = bind(m_Socket, addressToBind, addressToBind.GetRawSize());
+		int err = bind(m_Socket, addressToBind, (int)addressToBind.GetRawSize());
 		if (err)
 			return MAKE_STATUS(ActionStatus::FromWin32Error(err));
 	}
 
-	int err = connect(m_Socket, address, address.GetRawSize());
+	int err = connect(m_Socket, address, (int)address.GetRawSize());
 	if (err)
 		return MAKE_STATUS(ActionStatus::FromWin32Error(err));
 

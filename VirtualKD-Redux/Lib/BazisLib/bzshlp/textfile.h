@@ -98,7 +98,7 @@ namespace BazisLib
 								newSizeInChars = 1;
 
 							m_ZeroTerminatedBuffer.SetSize(newSizeInChars * sizeof(_CharType));
-							m_ZeroTerminatedBuffer[newSizeInChars - 1] = 0;
+							m_ZeroTerminatedBuffer[(unsigned int)newSizeInChars - 1] = 0;
 							return str;
 						}
 					}
@@ -114,7 +114,7 @@ namespace BazisLib
 						return ret;
 					}
 					m_ZeroTerminatedBuffer.SetSize(m_ZeroTerminatedBuffer.GetSize() + done);
-					m_ZeroTerminatedBuffer[m_ZeroTerminatedBuffer.GetSize() / sizeof(_CharType) - 1] = 0;
+					m_ZeroTerminatedBuffer[(unsigned int)m_ZeroTerminatedBuffer.GetSize() / sizeof(_CharType) - 1] = 0;
 				}
 			}
 		};

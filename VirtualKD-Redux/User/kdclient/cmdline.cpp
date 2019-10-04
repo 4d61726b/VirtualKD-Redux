@@ -97,7 +97,7 @@ template<class _Struct> static bool ReadProcessStructure(HANDLE hProcess, PVOID 
 
 static void ParseEnvironmentStrings(const wchar_t *pwszBlock, size_t blockLength, RemoteProcessInfo &info)
 {
-	int startOff = 0;
+	size_t startOff = 0;
 	for(size_t i = 0; !blockLength || (i < blockLength); i++)
 	{
 		if (!pwszBlock[i])

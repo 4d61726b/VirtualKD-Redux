@@ -26,24 +26,24 @@ unsigned VBoxCmdLineToVMNameW( const RemoteProcessInfo &info, wchar_t *pNameBuff
 	if (info.CommandLine.empty() || !pNameBuffer || !MaxLength)
 		return 0;
 
-	int idx = info.CommandLine.find(L"--comment");
-	if (idx != -1)
+	size_t idx = info.CommandLine.find(L"--comment");
+	if (idx != info.CommandLine.npos)
 	{
-		int vmOff = info.CommandLine.find_first_not_of(L" ", idx + 9);
-		if (vmOff != -1)
+		size_t vmOff = info.CommandLine.find_first_not_of(L" ", idx + 9);
+		if (vmOff != info.CommandLine.npos)
 		{
-			int vmEnd;
+			size_t vmEnd;
 			if (info.CommandLine[vmOff] == '\"')
 				vmEnd = info.CommandLine.find('\"', ++vmOff);
 			else
 				vmEnd = info.CommandLine.find(' ', vmOff);
 
-			if (vmEnd != -1)
+			if (vmEnd != info.CommandLine.npos)
 			{
-				int len = vmEnd - vmOff;
+				size_t len = vmEnd - vmOff;
 				wcsncpy(pNameBuffer, info.CommandLine.c_str() + vmOff, len);
 				pNameBuffer[len] = 0;
-				return len;
+				return (unsigned int)len;
 			}
 
 		}

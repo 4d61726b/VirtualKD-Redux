@@ -35,7 +35,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	return TRUE;
 }
 
-extern "C" __declspec(dllexport) bool DllRegisterServer()
+extern "C" bool DllRegisterServer()
 {
 	TCHAR tszThisDLL[MAX_PATH];
 	GetModuleFileName(g_hThisDll, tszThisDLL, __countof(tszThisDLL));

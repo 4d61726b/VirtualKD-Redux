@@ -210,7 +210,7 @@ void RPCTableManager<Record_T>::FindSections(char *lpMainExe, std::list<AddressR
 	if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
 	{
 		TCHAR tsz[512];
-		_sntprintf(tsz, __countof(tsz), _T("%dK of data found.\r\nScanning for RPC command name strings...\r\n"), totalSize / 1024);
+		_sntprintf(tsz, __countof(tsz), _T("%uK of data found.\r\nScanning for RPC command name strings...\r\n"), (unsigned int)(totalSize / 1024));
 		g_pReporter->LogLineIfEnabled(tsz);
 	}
 }
@@ -254,7 +254,7 @@ void RPCTableManager<Record_T>::MakeListOfStrings(const std::list<AddressRange> 
 	if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
 	{
 		TCHAR tsz[512];
-		_sntprintf(tsz, __countof(tsz), _T("Finished scanning. Found %d strings.\r\nSearching for string references...\r\n"), strings.Count());
+		_sntprintf(tsz, __countof(tsz), _T("Finished scanning. Found %u strings.\r\nSearching for string references...\r\n"), (unsigned int)strings.Count());
 		g_pReporter->LogLineIfEnabled(tsz);
 	}
 }
@@ -292,7 +292,7 @@ void RPCTableManager<Record_T>::FindStringRefs(const std::list<AddressRange> &da
 	if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
 	{
 		TCHAR tsz[512];
-		_sntprintf(tsz, __countof(tsz), _T("Found %d string references.\r\n"), stringRefs.Count());
+		_sntprintf(tsz, __countof(tsz), _T("Found %u string references.\r\n"), (unsigned int)stringRefs.Count());
 		g_pReporter->LogLineIfEnabled(tsz);
 	}
 }
@@ -580,7 +580,7 @@ bool RPCTableManager<Record_T>::InstallHandler(const char *pszPrefix, size_t pre
 				if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
 				{
 					TCHAR tsz[512];
-					_sntprintf(tsz, __countof(tsz), _T("Successfully patched entry #%d\r\n"), pRec - pFirst);
+					_sntprintf(tsz, __countof(tsz), _T("Successfully patched entry #%u\r\n"), (unsigned int)(pRec - pFirst));
 					g_pReporter->LogLineIfEnabled(tsz);
 				}
 				return true;

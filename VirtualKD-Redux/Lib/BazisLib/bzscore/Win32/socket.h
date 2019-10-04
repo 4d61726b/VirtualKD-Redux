@@ -187,7 +187,7 @@ namespace BazisLib
 				if (m_Socket == INVALID_SOCKET)
 					m_Socket = socket(pRawAddr->sa_family, SOCK_DGRAM, 0);
 
-				if (!bind(m_Socket, addr, addr.GetRawSize()))
+				if (!bind(m_Socket, addr, (int)addr.GetRawSize()))
 					return MAKE_STATUS(Success);
 				else
 					return MAKE_STATUS(ActionStatus::FailFromLastError());
@@ -198,7 +198,7 @@ namespace BazisLib
 				if (m_Socket == INVALID_SOCKET)
 					m_Socket = socket(((const sockaddr *)addr)->sa_family, SOCK_DGRAM, 0);
 
-				return sendto(m_Socket, (const char *)pBuffer, (int)size, 0, (const sockaddr *)addr, addr.GetRawSize());
+				return sendto(m_Socket, (const char *)pBuffer, (int)size, 0, (const sockaddr *)addr, (int)addr.GetRawSize());
 			}
 
 			size_t Recvfrom(const void *pBuffer, size_t size, BazisLib::Network::InternetAddress *pAddr = NULL)
