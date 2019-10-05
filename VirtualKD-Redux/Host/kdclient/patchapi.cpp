@@ -156,7 +156,7 @@ unsigned SessionNameFromVMWareCmdLineW(const wchar_t *pszCmdLineConst, wchar_t *
     size_t todo = end - start;
     if (todo >= MaxNameLength)
         todo = MaxNameLength - 1;
-    memcpy(pName, start, todo * sizeof(wchar_t *));
+    memcpy(pName, start, todo * sizeof(wchar_t));
     pName[todo] = 0;
     return (unsigned)todo;
 }
