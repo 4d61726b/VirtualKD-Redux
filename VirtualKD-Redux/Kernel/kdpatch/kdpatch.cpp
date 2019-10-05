@@ -7,8 +7,8 @@
 #include "stdafx.h"
 #include <Bazislib/bzshlp/WinKernel/driver.h>
 #include <Bazislib/bzshlp/WinKernel/device.h>
-#include "../kdvm/kdvm.h"
-#include "../kdvm/kdxxx.h"
+#include "kdvmguestlib/kdvm.h"
+#include "kdvmguestlib/kdxxx.h"
 #include "moduleapi.h"
 
 #include <Bazislib/bzscore/WinKernel/security.h>

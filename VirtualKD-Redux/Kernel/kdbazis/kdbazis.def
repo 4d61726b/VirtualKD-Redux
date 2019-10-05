@@ -1,4 +1,4 @@
-LIBRARY	"kdvm"
+LIBRARY	"kdbazis"
 
 EXPORTS
     KdD0Transition

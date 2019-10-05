@@ -101,7 +101,7 @@ BEGIN
     CONTROL         "Add [VirtualKD-Redux] suffix",IDC_ADDSUFFIX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,284,58,82,10
     EDITTEXT        IDC_TIMEOUT,152,69,23,14,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "second timeout.",IDC_STATIC,181,71,51,8
-    LTEXT           "This program will prepare your guest OS for debugging with VirtualKD-Redux. The boot manager configuration will be updated accordingly. Note that to start kernel debugging with VirtualKD-Redux, you will need to restart guest OS.",IDC_INFOTEXT,7,7,359,20
+    LTEXT           "This program will prepare your guest OS for debugging with VirtualKD-Redux. The boot manager configuration will be updated accordingly. To start kernel debugging with VirtualKD-Redux, you will need to restart guest OS.",IDC_INFOTEXT,7,7,359,20
     CONTROL         "Install VisualDDK Launch Monitor to:",IDC_INSTALLVDDK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,98,131,10
     EDITTEXT        IDC_VDDKLOCATION,144,96,222,14,ES_AUTOHSCROLL

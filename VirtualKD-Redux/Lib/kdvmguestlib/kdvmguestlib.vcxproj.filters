@@ -15,41 +15,41 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\kdvm\kdvm.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="kdvm.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\kdvm\kdrpc.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\kdvm\kdvm.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\kdvm\kdxxx.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\kdvm\vboxrpc.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="VisualDDKHelpers.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="..\kdvm\vmwrpc.h">
+    <ClInclude Include="kdrpc.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="kdvm.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="kdxxx.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="vboxrpc.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmwrpc.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="..\kdvm\vboxrpc64.asm">
+    <MASM Include="vboxrpc64.asm">
       <Filter>Source files</Filter>
     </MASM>
-    <MASM Include="..\kdvm\vmwrpc64.asm">
+    <MASM Include="vmwrpc64.asm">
       <Filter>Source files</Filter>
     </MASM>
   </ItemGroup>

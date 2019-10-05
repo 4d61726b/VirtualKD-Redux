@@ -7,11 +7,15 @@ msbuild /m VirtualKD-Redux.sln /property:Platform=x64 /property:Configuration="D
 msbuild /m VirtualKD-Redux.sln /property:Platform=Win32 /property:Configuration="Release" || goto error
 msbuild /m VirtualKD-Redux.sln /property:Platform=x64 /property:Configuration="Release" || goto error
 
-goto end
+goto success
+
 :error
 echo Build failed!
-pause
+goto end
+
+:success
+call "createbundle.bat"
 
 :end
-call "createbundle.bat"
 pause
+

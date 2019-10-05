@@ -5,8 +5,8 @@
 */
 
 #pragma once
-#include "Kernel/kdvm/kdrpc.h"
-#include "Kernel/kdvm/kdxxx.h"
+#include "kdvmguestlib/kdrpc.h"
+#include "kdvmguestlib/kdxxx.h"
 #include <BazisLib/bzscore/assert.h>
 
 //! Contains declarations for KdSendPacket()/KdReceivePacket() versions called on host side.

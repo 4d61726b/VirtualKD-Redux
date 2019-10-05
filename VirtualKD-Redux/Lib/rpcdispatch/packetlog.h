@@ -7,7 +7,7 @@
 #pragma once
 #include <BazisLib/bzscore/autofile.h>
 #include <BazisLib/bzscore/datetime.h>
-#include "Kernel/kdvm/kdxxx.h"
+#include "kdvmguestlib/kdxxx.h"
 
 //! Manages HTML log files for sent and receiving packets
 class PacketLogger

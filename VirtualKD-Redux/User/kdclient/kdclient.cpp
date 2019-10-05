@@ -7,7 +7,7 @@
 #include "stdafx.h"
 #include <tchar.h>
 #include "KDClient.h"
-#include "Kernel/kdvm/kdrpc.h"
+#include "kdvmguestlib/kdrpc.h"
 #include "tablemgr.h"
 #include "rpcdispatch/kdcomdisp.h"
 #include "rpcdispatch/reporter.h"

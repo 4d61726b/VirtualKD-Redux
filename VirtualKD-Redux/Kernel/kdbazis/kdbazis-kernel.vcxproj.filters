@@ -19,11 +19,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="kdvm.def">
-      <Filter>Source files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Header files</Filter>
     </ClInclude>
@@ -33,5 +28,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="kdvm.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="kdbazis.def">
+      <Filter>Source files</Filter>
+    </None>
   </ItemGroup>
 </Project>
