@@ -17,12 +17,15 @@
     <ClCompile>
         <WarningLevel>Level3</WarningLevel>
         <AdditionalIncludeDirectories Condition="$(ProjectName.EndsWith('-kernel'))">$(WDK7_PATH)\inc\ddk;$(WDK7_PATH)\inc\api;$(WDK7_PATH)\inc\crt;$(SolutionDir)Lib\STLPort\stlport;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-        <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+        <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Lib;$(SolutionDir)Lib\WTL\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
+    <ResourceCompile>
+        <AdditionalIncludeDirectories>$(SolutionDir)Lib\WTL\Include;$(SolutionDir);$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="$(Configuration.Contains('Debug'))">
     <ClCompile>

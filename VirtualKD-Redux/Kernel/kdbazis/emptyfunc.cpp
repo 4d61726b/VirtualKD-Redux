@@ -12,14 +12,22 @@
 extern "C"
 {
     DEFINE_EMPTYFUNC0(KdD0Transition)
-    DEFINE_EMPTYFUNC0(KdD3Transition)
-    DEFINE_EMPTYFUNC1(KdDebuggerInitialize1)
+        DEFINE_EMPTYFUNC0(KdD3Transition)
+        DEFINE_EMPTYFUNC1(KdDebuggerInitialize1)
 
-	DEFINE_EMPTYFUNC1(KdRestore)
-	DEFINE_EMPTYFUNC1(KdSave)
+        DEFINE_EMPTYFUNC1(KdRestore)
+        DEFINE_EMPTYFUNC1(KdSave)
 
-	NTSTATUS KdSetHiberRange(void *)
-	{
-		return STATUS_NOT_SUPPORTED;	//As in KDCOM.DLL
-	}
+        NTSTATUS KdSetHiberRange(void *)
+    {
+        return STATUS_NOT_SUPPORTED;	//As in KDCOM.DLL
+    }
+}
+
+extern "C" NTSTATUS _stdcall DriverEntry(
+    IN OUT PDRIVER_OBJECT   DriverObject,
+    IN PUNICODE_STRING      RegistryPath
+)
+{
+    return STATUS_SUCCESS;
 }

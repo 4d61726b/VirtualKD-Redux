@@ -171,18 +171,12 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\BazisLib\bzscore\bzscore-user.vcxproj">
-      <Project>{2d88c48f-d86a-4456-85e4-4bb5ab2d0135}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Lib\BazisLib\bzshlp\bzshlp-user.vcxproj">
-      <Project>{0ead365b-30f9-4c98-a47c-14e8a77abcf7}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Lib\kdvmguestlib\kdvmguestlib.vcxproj">
-      <Project>{675c91ec-ee0a-4f00-bc9c-198137e7cc7c}</Project>
-    </ProjectReference>
+    <None Include="kdbazis.def" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="kdbazis.def" />
+    <ProjectReference Include="..\..\Lib\kdvmguestlib\kdvmguestlib-kernel.vcxproj">
+      <Project>{675c91ec-ee0a-4f00-bc9c-198137e7cc7c}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

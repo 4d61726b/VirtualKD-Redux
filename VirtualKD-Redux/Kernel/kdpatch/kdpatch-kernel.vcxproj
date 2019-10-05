@@ -184,7 +184,7 @@
     <ProjectReference Include="..\..\Lib\BazisLib\bzshlp\bzshlp-kernel.vcxproj">
       <Project>{443b5c7d-6675-4a16-a297-e8653eee39ad}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Lib\kdvmguestlib\kdvmguestlib.vcxproj">
+    <ProjectReference Include="..\..\Lib\kdvmguestlib\kdvmguestlib-kernel.vcxproj">
       <Project>{675c91ec-ee0a-4f00-bc9c-198137e7cc7c}</Project>
     </ProjectReference>
   </ItemGroup>

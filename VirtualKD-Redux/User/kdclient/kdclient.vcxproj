@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C4B4BEBB-A28A-4C99-AAB7-49EAA35496AD}</ProjectGuid>
-    <RootNamespace>dbgpatch</RootNamespace>
+    <RootNamespace>kdclient</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

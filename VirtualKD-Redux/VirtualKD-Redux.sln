@@ -35,7 +35,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kdpatch-kernel", "Kernel\kd
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kdbazis-kernel", "Kernel\kdbazis\kdbazis-kernel.vcxproj", "{8F848AF2-6FD7-4418-9765-6A9B964836CF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kdvmguestlib", "Lib\kdvmguestlib\kdvmguestlib.vcxproj", "{675C91EC-EE0A-4F00-BC9C-198137E7CC7C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kdvmguestlib-kernel", "Lib\kdvmguestlib\kdvmguestlib-kernel.vcxproj", "{675C91EC-EE0A-4F00-BC9C-198137E7CC7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
