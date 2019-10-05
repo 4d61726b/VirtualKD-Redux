@@ -29,7 +29,7 @@ bool, DefaultPatchingAtTableStart, false,
 bool, AllowReplacingFirstCommand, false,
 bool, WaitForNonZeroFirstCommand, true,
 unsigned, MinRunTimeBeforePatch, 10000,
-bool, DisablePatchDatabase, false);
+bool, DisablePatchDatabase, true);
 
 
 //! Stores information about \ref guestrpc handler table location for different versions of VMWARE-VMX.EXE

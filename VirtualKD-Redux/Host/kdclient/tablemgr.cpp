@@ -42,7 +42,7 @@ void PatchInfoDatabase::AddBuiltInRecords()
 {
     static const std::vector<PatchInfoRecord> vecRecords = {
         // vmware-vmx.exe 15.5.0 build-14665864
-        {1568685315,16754096,8153517,14297256,111}
+        // {1568685315,16754096,8153517,14297256,110}
     };
 
     for (const PatchInfoRecord& rec : vecRecords)
@@ -329,7 +329,7 @@ void RPCTableManager<Record_T>::GroupStringRefs(BazisLib::SingleMallocVector<Str
     {
         if (stringRefs[j].GroupID)
         {
-            groups[stringRefs[j].GroupID - 1].pAddr = stringRefs[j].pAddress;
+            groups[stringRefs[j].GroupID - 1].pAddr = (BYTE*)stringRefs[j].pAddress - offsetof(Record_T, pCommandPrefix);
             groups[stringRefs[j].GroupID - 1].RefCount++;
         }
     }
@@ -420,7 +420,7 @@ bool RPCTableManager<Record_T>::FindHandlerTable(bool FullMode)
     if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
     {
         TCHAR tsz[512];
-        _sntprintf(tsz, __countof(tsz), _T("Potential RPC table analyzis complete. Found %d candidates.\r\n"), matchCount);
+        _sntprintf(tsz, __countof(tsz), _T("Potential RPC table analysis complete. Found %d candidates.\r\n"), matchCount);
         g_pReporter->LogLineIfEnabled(tsz);
         if (matchCount < 30)
         {
@@ -522,7 +522,7 @@ bool RPCTableManager<Record_T>::InstallHandler(const char *pszPrefix, size_t pre
         if (!FindHandlerTable(false))
         {
             if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
-                g_pReporter->LogLineIfEnabled(_T("Cannot determine RPC dispatcher table location.\r\nPerforming additional analyzis.\r\n"));
+                g_pReporter->LogLineIfEnabled(_T("Cannot determine RPC dispatcher table location.\r\nPerforming additional analysis.\r\n"));
             if (!FindHandlerTable(true))
             {
                 if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
@@ -616,7 +616,10 @@ bool RPCTableManager<Record_T>::InstallHandler(const char *pszPrefix, size_t pre
         return true;
     }
     if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
-        g_pReporter->LogLineIfEnabled(_T("Cannot found a usable entry to patch! Exitting.\r\n"));
+    {
+        g_pReporter->LogLineIfEnabled(_T("Cannot find a usable entry to patch! Exiting.\r\n"));
+        g_pReporter->LogLineIfEnabled(_T("Please report this issue at https://github.com/4d61726b/VirtualKD-Redux/issues\r\n"));
+    }
     return false;
 }
 
