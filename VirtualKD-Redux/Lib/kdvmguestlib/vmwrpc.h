@@ -356,7 +356,7 @@ protected:
 	bool Send(const char *pData, unsigned Size = 0)
 	{
 		if (!Size)
-			Size = strlen(pData);
+			Size = (unsigned int)strlen(pData);
 		m_CachedReplySize = -1;
 		return VMWareRPC::SendData(this, Size, pData);
 	}

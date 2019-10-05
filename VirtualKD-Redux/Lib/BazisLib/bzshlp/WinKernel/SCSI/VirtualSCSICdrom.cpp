@@ -49,7 +49,11 @@ SCSIResult BazisLib::DDK::SCSI::VirtualSCSICdrom::ExecuteSCSIRequest(GenericSRB 
 
 static inline unsigned TrackRecordEndOffset(unsigned recNum)
 {
+#pragma warning(push)
+#pragma warning(disable: 4311)
+#pragma warning(disable: 4302)
 	return (unsigned)(&((PCDROM_TOC)NULL)->TrackData[recNum + 1]);
+#pragma warning(pop)
 }
 
 SCSIResult BazisLib::DDK::SCSI::VirtualSCSICdrom::OnReadTOC(Requests::ReadTOC &request)

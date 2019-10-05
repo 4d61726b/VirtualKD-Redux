@@ -99,7 +99,12 @@ KernelGetProcAddress(
     PIMAGE_EXPORT_DIRECTORY exports =(PIMAGE_EXPORT_DIRECTORY)
     RtlImageDirectoryEntryToData(ModuleBase, TRUE, IMAGE_DIRECTORY_ENTRY_EXPORT, &size);
 
+#pragma warning(push)
+#pragma warning(disable: 4311)
+#pragma warning(disable: 4302)
+#pragma warning(disable: 4312)
     ULONG_PTR addr = (ULONG_PTR)(PUCHAR)((ULONG)exports-(ULONG)ModuleBase);
+#pragma warning(pop)
 
 	PULONG functions =(PULONG)((ULONG_PTR) ModuleBase + exports->AddressOfFunctions);
     PSHORT ordinals  =(PSHORT)((ULONG_PTR) ModuleBase + exports->AddressOfNameOrdinals);

@@ -496,7 +496,8 @@ NTSTATUS Device::EnqueuePacket(IN IncomingIrp *Irp)
 	if (!m_pDeviceQueue)
 		return STATUS_INTERNAL_ERROR;
 	Irp->MarkPending();
-	if (!m_pDeviceQueue->EnqueuePacket(Irp->m_pIrp, (void *)Irp->m_Flags))
+    
+	if (!m_pDeviceQueue->EnqueuePacket(Irp->m_pIrp, LongToPtr(Irp->m_Flags)))
 	{
 		Irp->SetIoStatus(STATUS_DELETE_PENDING);
 		Irp->CompleteRequest();
@@ -516,7 +517,7 @@ void Device::RequestDispatcherThreadBody(IN PVOID pParam)
 	{
 /*		if (pDevice->m_pDeviceQueue->GetPacketCount() > 1)
 			__asm int 3;*/
-		IncomingIrp incomingIrp(pIrp, (((long)pContext) | IncomingIrp::FromDispatchThread) & ~IncomingIrp::IrpMarkedPending);
+		IncomingIrp incomingIrp(pIrp, ((PtrToLong(pContext)) | IncomingIrp::FromDispatchThread) & ~IncomingIrp::IrpMarkedPending);
 		NTSTATUS st = pDevice->DispatchRoutine(&incomingIrp, IoGetCurrentIrpStackLocation(pIrp));
 		pDevice->PostProcessIRP(&incomingIrp, st, true);
 	}

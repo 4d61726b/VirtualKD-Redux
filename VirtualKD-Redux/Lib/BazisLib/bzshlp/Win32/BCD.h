@@ -504,11 +504,11 @@ for each(BCDObject obj in store.GetObjects())
 
 			public:
 				//! Returns the number of object in the store
-				unsigned GetObjectCount()
+				size_t GetObjectCount()
 				{
 					if (!ProvideBcdObjects().Successful())
 						return 0;
-					return (unsigned)m_BcdObjects.size();
+					return m_BcdObjects.size();
 				}
 
 				//! Returns a list of BCD objects in a store

@@ -13,12 +13,17 @@
   <PropertyGroup>
         <XPDeprecationWarning>false</XPDeprecationWarning>
   </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration.Contains('Release'))" Label="Configuration">
+        <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
         <WarningLevel>Level3</WarningLevel>
         <AdditionalIncludeDirectories Condition="$(ProjectName.EndsWith('-kernel'))">$(WDK7_PATH)\inc\ddk;$(WDK7_PATH)\inc\api;$(WDK7_PATH)\inc\crt;$(SolutionDir)Lib\STLPort\stlport;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Lib;$(SolutionDir)Lib\WTL\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
+        <TreatWarningAsError>true</TreatWarningAsError>
+        <DisableSpecificWarnings>4595;4091;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Lib>
       <AdditionalOptions>/IGNORE:4221 %(AdditionalOptions)</AdditionalOptions>
@@ -42,6 +47,9 @@
         <Optimization>Full</Optimization>
         <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
         <FunctionLevelLinking>true</FunctionLevelLinking>
+        <Optimization>MaxSpeed</Optimization>
+        <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+        <OmitFramePointers>true</OmitFramePointers>
         <IntrinsicFunctions>true</IntrinsicFunctions>
         <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
         <StringPooling>true</StringPooling>

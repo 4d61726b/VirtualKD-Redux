@@ -42,7 +42,7 @@ namespace BootEditor
 		virtual unsigned GetTimeout(ActionStatus *pStatus = NULL)=0;
 		virtual ActionStatus SetTimeout(unsigned TimeoutInSeconds)=0;
 
-		virtual int GetEntryCount()=0;
+		virtual size_t GetEntryCount()=0;
 	};
 
 	ManagedPointer<AIBootConfigurationEditor> CreateConfigurationEditor();

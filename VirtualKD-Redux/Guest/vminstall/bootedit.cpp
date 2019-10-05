@@ -156,7 +156,7 @@ namespace VistaBCD
 			}
 		}
 
-		virtual int GetEntryCount()
+		virtual size_t GetEntryCount()
 		{
 			return m_Store.GetObjectCount();
 		}
@@ -594,7 +594,7 @@ namespace BootIniEditor
 			return new BootEntry(ManagedPointer<BootConfigEditor>(AUTO_THIS), m_PendingEntry++);
 		}
 
-		virtual int GetEntryCount()
+		virtual size_t GetEntryCount()
 		{
 			return m_OSEntries.size();
 		}
@@ -614,7 +614,7 @@ namespace BootIniEditor
 			m_OSEntries[m_OSEntries.size() - 1].FlagAsCopy();
 
 			ASSIGN_STATUS(pStatus, Success);
-			return new BootEntry(ManagedPointer<BootConfigEditor>(AUTO_THIS), m_OSEntries.size() - 1);
+			return new BootEntry(ManagedPointer<BootConfigEditor>(AUTO_THIS), (int)(m_OSEntries.size() - 1));
 		}
 
 		virtual ActionStatus FinishEditing()

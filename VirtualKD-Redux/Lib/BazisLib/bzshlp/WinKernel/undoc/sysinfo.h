@@ -86,5 +86,5 @@ typedef struct _SYSTEM_MODULE {
 
 typedef struct _SYSTEM_MODULE_INFORMATION {
   ULONG_PTR            ModulesCount;
-  SYSTEM_MODULE        Modules[0];
+  SYSTEM_MODULE        Modules[ANYSIZE_ARRAY];
 } SYSTEM_MODULE_INFORMATION, *PSYSTEM_MODULE_INFORMATION;

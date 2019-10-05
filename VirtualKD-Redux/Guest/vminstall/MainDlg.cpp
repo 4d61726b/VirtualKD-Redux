@@ -161,7 +161,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 
 	if (SendDlgItemMessage(IDC_NEWENTRY, BM_GETCHECK) == BST_CHECKED)
 	{
-		size_t len = ::GetWindowTextLength(GetDlgItem(IDC_ENTRYNAME));
+		int len = ::GetWindowTextLength(GetDlgItem(IDC_ENTRYNAME));
 		entryName.SetLength(GetDlgItemText(IDC_ENTRYNAME, entryName.PreAllocate(len, false), len + 1));
 		createNewEntry = true;
 	}

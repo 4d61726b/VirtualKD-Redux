@@ -99,7 +99,7 @@ NTSTATUS RegistryKey::ReadString(LPCWSTR pwszValueName, String &value)
 	case REG_DWORD:
 		{
 			wchar_t wsz[32];
-			swprintf(wsz,L"%u", (unsigned int)pInfo->Data);
+			swprintf(wsz,L"%u", *(unsigned int*)pInfo->Data);
 			break;
 		}
 	case REG_SZ:

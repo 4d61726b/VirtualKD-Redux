@@ -118,6 +118,7 @@ public:
 		//SendableKdBuffer should be KD_BUFFER minus pData field (used in serialization). If not, an error will popup here:
 #ifndef _AMD64_
 		char _unused0[(int)(&((KD_BUFFER *)0)->pData) == sizeof(SendableKdBuffer)];
+        UNREFERENCED_PARAMETER(_unused0);
 #endif
 
 #ifdef VIRTUALKD_BENCHMARK_AND_EXIT

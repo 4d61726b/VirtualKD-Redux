@@ -31,7 +31,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	// BLOCK: Run application
 	{
 		CMainDlg dlgMain;
-		nRet = dlgMain.DoModal();
+		nRet = (int)dlgMain.DoModal();
 	}
 
 	_Module.Term();
