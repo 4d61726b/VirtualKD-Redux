@@ -13,35 +13,35 @@ void OnDLLProcessDetach();
 
 HMODULE g_hThisDll = 0;
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HMODULE hModule,
+    DWORD  ul_reason_for_call,
+    LPVOID lpReserved
+)
 {
-	switch (ul_reason_for_call)
-	{
-	case DLL_PROCESS_ATTACH:
-		g_hThisDll = hModule;
-		if (!HookVmware((HINSTANCE)hModule))
-			return FALSE;
-		break;
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-		break;
-	case DLL_PROCESS_DETACH:
-		OnDLLProcessDetach();
-		break;
-	}
-	return TRUE;
+    switch (ul_reason_for_call)
+    {
+    case DLL_PROCESS_ATTACH:
+        g_hThisDll = hModule;
+        if (!HookVmware((HINSTANCE)hModule))
+            return FALSE;
+        break;
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+        break;
+    case DLL_PROCESS_DETACH:
+        OnDLLProcessDetach();
+        break;
+    }
+    return TRUE;
 }
 
 extern "C" bool DllRegisterServer()
 {
-	TCHAR tszThisDLL[MAX_PATH];
-	GetModuleFileName(g_hThisDll, tszThisDLL, __countof(tszThisDLL));
+    TCHAR tszThisDLL[MAX_PATH];
+    GetModuleFileName(g_hThisDll, tszThisDLL, __countof(tszThisDLL));
 
-	BazisLib::RegistryKey key(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SysProgs\\VirtualKD\\VirtualBoxIntegration"));
-	key[_T("KDClientDLLPath")] = tszThisDLL;
-	
-	return true;
+    BazisLib::RegistryKey key(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SysProgs\\VirtualKD\\VirtualBoxIntegration"));
+    key[_T("KDClientDLLPath")] = tszThisDLL;
+
+    return true;
 }

@@ -8,13 +8,13 @@
 
 enum KDClientCommand
 {
-	kGetVMSessionName = 1,
-	kIsSessionPatched,
-	kStartVMSessionPatching,
-	kStartVMSessionUnpatching,
-	kPatchAndWait,
-	kUnpatchAndWait,
-	kQueryVersion,
+    kGetVMSessionName = 1,
+    kIsSessionPatched,
+    kStartVMSessionPatching,
+    kStartVMSessionUnpatching,
+    kPatchAndWait,
+    kUnpatchAndWait,
+    kQueryVersion,
 };
 
 ULONGLONG Call64BitKDCLIENT(KDClientCommand cmd, unsigned PID, LPWSTR lpStringResult = NULL, size_t StringSize = 0);
