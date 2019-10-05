@@ -526,7 +526,10 @@ bool RPCTableManager<Record_T>::InstallHandler(const char *pszPrefix, size_t pre
             if (!FindHandlerTable(true))
             {
                 if (s_EnableLogging && (g_pReporter->GetStatusPointer()->DebugLevel >= DebugLevelTracePatching))
-                    g_pReporter->LogLineIfEnabled(_T("Still cannot find RPC dispatcher table. Try another VMWare version :-(\r\n"));
+                {
+                    g_pReporter->LogLineIfEnabled(_T("Still cannot find RPC dispatcher table.\r\n"));
+                    g_pReporter->LogLineIfEnabled(_T("Please report this issue at https://github.com/4d61726b/VirtualKD-Redux/issues\r\n"));
+                }
                 return false;
             }
         }
