@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C47EE630-32C8-43E1-9F57-1769E540816B}</ProjectGuid>
+    <RootNamespace>kdpatch</RootNamespace>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
+    <ProjectName>kdpatch-kernel</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(SolutionDir)\VirtualKD-Redux.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141_xp</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v141_xp</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetExt>.sys</TargetExt>
+    <TargetName>kdpatch</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetExt>.sys</TargetExt>
+    <TargetName>kdpatch</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetExt>.sys</TargetExt>
+    <TargetName>kdpatch</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetExt>.sys</TargetExt>
+    <TargetName>kdpatch</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_X86_;_DDK_;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ntoskrnl.lib;hal.lib;int64.lib;ntstrsafe.lib;exsup.lib;wdmsec.lib;BufferOverflowK.lib;ksecdd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WDK7_PATH)\lib\WXP\i386;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <SubSystem>Native</SubSystem>
+      <Driver>Driver</Driver>
+      <EntryPointSymbol>DriverEntry</EntryPointSymbol>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_AMD64_;_DDK_;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ntoskrnl.lib;hal.lib;ntstrsafe.lib;wdmsec.lib;BufferOverflowK.lib;ksecdd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WDK7_PATH)\lib\WNET\amd64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <SubSystem>Native</SubSystem>
+      <Driver>Driver</Driver>
+      <EntryPointSymbol>DriverEntry</EntryPointSymbol>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_X86_;_DDK_;_NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ntoskrnl.lib;hal.lib;int64.lib;ntstrsafe.lib;exsup.lib;wdmsec.lib;BufferOverflowK.lib;ksecdd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WDK7_PATH)\lib\WXP\i386;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <SubSystem>Native</SubSystem>
+      <Driver>Driver</Driver>
+      <EntryPointSymbol>DriverEntry</EntryPointSymbol>
+    </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_AMD64_;_DDK_;_NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>ntoskrnl.lib;hal.lib;ntstrsafe.lib;wdmsec.lib;BufferOverflowK.lib;ksecdd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WDK7_PATH)\lib\WNET\amd64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <SubSystem>Native</SubSystem>
+      <Driver>Driver</Driver>
+      <EntryPointSymbol>DriverEntry</EntryPointSymbol>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="kdpatch.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="moduleapi.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="kdpatch.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\BazisLib\bzscore\bzscore-kernel.vcxproj">
+      <Project>{a009693f-aadd-42cf-8e6e-f7bbf5601e5c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lib\BazisLib\bzshlp\bzshlp-kernel.vcxproj">
+      <Project>{443b5c7d-6675-4a16-a297-e8653eee39ad}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\kdvmguestlib\kdvmguestlib.vcxproj">
+      <Project>{675c91ec-ee0a-4f00-bc9c-198137e7cc7c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
