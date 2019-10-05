@@ -178,7 +178,7 @@
     <ResourceCompile Include="vminstall.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(SolutionDir)Kernel\kdpatch\kdpatch.reg">
+    <Content Include="$(SolutionDir)Guest\kdpatch\kdpatch.reg">
       <FileType>Document</FileType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

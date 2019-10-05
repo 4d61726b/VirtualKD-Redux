@@ -37,7 +37,7 @@ public:
 	virtual ~IKdComDispatcher(){}
 };
 
-#include "User/kdclient/patchapi.h"
+#include "Host/kdclient/patchapi.h"
 
 //! Contains code unmarshalling parameters for ::KdSendPacket()/::KdReceivePacket()
 /*! This class parses the data blocks containing function parameters and calls the corresponding methods

@@ -9,7 +9,7 @@
 #include "trassist.h"
 #include "PacketLog.h"
 #include <BazisLib/bzscore/buffer.h>
-#include "User/kdclient/TerminationNotifier.h"
+#include "Host/kdclient/TerminationNotifier.h"
 #include <BazisLib/bzscore/datetime.h>
 #include "ServiceCommandHandler.h"
 
