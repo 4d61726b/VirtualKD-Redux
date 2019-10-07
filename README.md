@@ -1,6 +1,6 @@
 # VirtualKD-Redux
 
-VirtualKD-Redux is a fork of Sysprogs' VirtualKD.
+VirtualKD-Redux is a modernization of Sysprogs' VirtualKD.
 
 ## Features
 
@@ -10,8 +10,11 @@ VirtualKD-Redux is a fork of Sysprogs' VirtualKD.
 * Simplified build system. No additional libraries required
 
 ## Downloads
-
 [Download the latest VirtualKD-Redux release](https://github.com/4d61726b/VirtualKD-Redux/releases)
+
+## Documentation
+* A quick and easy tutorial can be found [here](https://github.com/4d61726b/VirtualKD-Redux/blob/master/VirtualKD-Redux/Docs/Tutorial.md)
+* Original documentation (May be out of date) can be found [here](http://sysprogs.com/legacy/virtualkd/dox/)
 
 ## Build Instructions
 ### Prerequisites
@@ -22,7 +25,5 @@ VirtualKD-Redux is a fork of Sysprogs' VirtualKD.
 2. Edit make.bat to modify VS150COMNTOOLS path if needed
 3. Run make.bat
 4. Use binaries produced in Bundle directory
-## Documentation
-* Consult the documentation for VirtualKD (http://sysprogs.com/legacy/virtualkd/).
 ## Issues or Feature Requests
 * Issues, bugs, or feature requests can be raised on the [issue tracker on GitHub](https://github.com/4d61726b/VirtualKD-Redux/issues).
