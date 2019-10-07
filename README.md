@@ -1,6 +1,5 @@
 # VirtualKD-Redux
-
-VirtualKD-Redux is a modernization of Sysprogs' VirtualKD.
+![](https://github.com/4d61726b/VirtualKD-Redux/blob/master/VirtualKD-Redux/Docs/vmmon.png)
 
 ## Features
 
