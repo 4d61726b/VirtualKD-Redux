@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+        <Optimization Condition="'$(Platform)' == 'Win32'">Disabled</Optimization>
         <WarningLevel>Level3</WarningLevel>
         <AdditionalIncludeDirectories Condition="$(ProjectName.EndsWith('-kernel'))">$(WDK7_PATH)\inc\ddk;$(WDK7_PATH)\inc\api;$(WDK7_PATH)\inc\crt;$(SolutionDir)Lib\STLPort\stlport;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Lib;$(SolutionDir)Lib\WTL\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -44,10 +45,9 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="$(Configuration.Contains('Release'))">
     <ClCompile>
-        <Optimization>Full</Optimization>
+        <Optimization Condition="'$(Platform)' == 'x64'">MaxSpeed</Optimization>
         <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
         <FunctionLevelLinking>true</FunctionLevelLinking>
-        <Optimization>MaxSpeed</Optimization>
         <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
         <OmitFramePointers>true</OmitFramePointers>
         <IntrinsicFunctions>true</IntrinsicFunctions>
