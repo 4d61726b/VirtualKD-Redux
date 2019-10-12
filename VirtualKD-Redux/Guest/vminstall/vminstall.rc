@@ -97,10 +97,10 @@ BEGIN
     CONTROL         "Create a new boot entry:",IDC_NEWENTRY,"Button",BS_AUTORADIOBUTTON,9,27,93,10
     EDITTEXT        IDC_ENTRYNAME,11,39,355,14,ES_AUTOHSCROLL
     CONTROL         "Set VirtualKD-Redux boot entry as default with",IDC_SETDEFAULT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,71,139,10
-    CONTROL         "Add [VirtualKD-Redux] suffix",IDC_ADDSUFFIX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,284,58,82,10
-    EDITTEXT        IDC_TIMEOUT,152,69,23,14,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "second timeout.",IDC_STATIC,181,71,51,8
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,71,144,10
+    CONTROL         "Add [VKD-Redux] suffix",IDC_ADDSUFFIX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,277,57,87,10
+    EDITTEXT        IDC_TIMEOUT,156,69,23,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "second timeout.",IDC_STATIC,185,71,51,8
     LTEXT           "This program will prepare your guest OS for debugging with VirtualKD-Redux. The boot manager configuration will be updated accordingly. To start kernel debugging with VirtualKD-Redux, you will need to restart guest OS.",IDC_INFOTEXT,7,7,359,20
     CONTROL         "Install VisualDDK Launch Monitor to:",IDC_INSTALLVDDK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,98,131,10

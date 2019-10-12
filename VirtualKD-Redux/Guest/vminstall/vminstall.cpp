@@ -26,26 +26,26 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     }
 #endif
 
-	HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	ATLASSERT(SUCCEEDED(hRes));
+    HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    ATLASSERT(SUCCEEDED(hRes));
 
-	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
-	::DefWindowProc(NULL, 0, 0, 0L);
+    // this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
+    ::DefWindowProc(NULL, 0, 0, 0L);
 
-	AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
+    AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
 
-	hRes = _Module.Init(NULL, hInstance);
-	ATLASSERT(SUCCEEDED(hRes));
+    hRes = _Module.Init(NULL, hInstance);
+    ATLASSERT(SUCCEEDED(hRes));
 
-	int nRet = 0;
-	// BLOCK: Run application
-	{
-		CMainDlg dlgMain;
-		nRet = (int)dlgMain.DoModal();
-	}
+    int nRet = 0;
+    // BLOCK: Run application
+    {
+        CMainDlg dlgMain;
+        nRet = (int)dlgMain.DoModal();
+    }
 
-	_Module.Term();
-	::CoUninitialize();
+    _Module.Term();
+    ::CoUninitialize();
 
-	return nRet;
+    return nRet;
 }
