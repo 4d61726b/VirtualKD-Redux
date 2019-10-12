@@ -13,8 +13,6 @@
 #include <tlhelp32.h>
 #include <BazisLib/bzshlp/Win32/wow64.h>
 
-#pragma comment(lib, "ntdll")
-
 /*
 //! Rtl functions from http://native-nt-toolkit.googlecode.com/svn/trunk/ndk/rtlfuncs.h
 extern "C"

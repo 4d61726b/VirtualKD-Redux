@@ -38,6 +38,9 @@
         <Optimization>Disabled</Optimization>
         <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
         <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+        <BasicRuntimeChecks Condition="!$(ProjectName.EndsWith('-kernel'))">EnableFastChecks</BasicRuntimeChecks>
+        <BasicRuntimeChecks Condition="$(ProjectName.EndsWith('-kernel'))">Default</BasicRuntimeChecks>
+        <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -53,6 +56,8 @@
         <IntrinsicFunctions>true</IntrinsicFunctions>
         <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
         <StringPooling>true</StringPooling>
+        <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+        <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>

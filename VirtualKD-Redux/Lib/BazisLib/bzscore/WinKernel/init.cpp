@@ -113,7 +113,7 @@ static void __stdcall DriverUnloadHook(PDRIVER_OBJECT pDriver)
 	TerminateCppRunTime();
 }
 
-extern "C" NTSTATUS _stdcall DriverEntry(
+NTSTATUS _stdcall BazisCoreDriverEntry(
 	IN OUT PDRIVER_OBJECT   DriverObject,
 	IN PUNICODE_STRING      RegistryPath
 	)

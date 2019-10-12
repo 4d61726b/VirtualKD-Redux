@@ -6,8 +6,6 @@
 
 #include "cmdline.h"
 
-#pragma comment(lib, "ntdll")
-
 extern "C" NTSTATUS __stdcall
 NtQueryInformationProcess(
     IN HANDLE ProcessHandle,
@@ -16,6 +14,7 @@ NtQueryInformationProcess(
     IN ULONG ProcessInformationLength,
     OUT PULONG ReturnLength OPTIONAL
 );
+using Func_NtQueryInformationProcess = decltype(NtQueryInformationProcess);
 
 //http://undocumented.ntinternals.net/UserMode/Structures/RTL_USER_PROCESS_PARAMETERS.html
 typedef struct
@@ -128,7 +127,14 @@ RemoteProcessInfo GetLocalProcessInfo()
 
 RemoteProcessInfo GetRemoteProcessInfo(DWORD PID)
 {
-    if (!PID)
+    HMODULE hModNtDll = GetModuleHandleW(L"ntdll.dll");
+    Func_NtQueryInformationProcess* _NtQueryInformationProcess;
+
+    if (!PID || !hModNtDll)
+        return GetLocalProcessInfo();
+
+    _NtQueryInformationProcess = (Func_NtQueryInformationProcess *)GetProcAddress(hModNtDll, "NtQueryInformationProcess");
+    if (!_NtQueryInformationProcess)
         return GetLocalProcessInfo();
 
     HANDLE hProc = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_QUERY_INFORMATION, FALSE, PID);
@@ -137,7 +143,7 @@ RemoteProcessInfo GetRemoteProcessInfo(DWORD PID)
 
     PROCESS_BASIC_INFORMATION basicInfo = { 0 };
     ULONG done = 0;
-    NTSTATUS st = NtQueryInformationProcess(hProc, ProcessBasicInformation, &basicInfo, sizeof(basicInfo), &done);
+    NTSTATUS st = _NtQueryInformationProcess(hProc, ProcessBasicInformation, &basicInfo, sizeof(basicInfo), &done);
     if (!NT_SUCCESS(st) || (done != sizeof(basicInfo)))
     {
         CloseHandle(hProc);
