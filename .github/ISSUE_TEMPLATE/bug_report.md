@@ -24,8 +24,8 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Configuration (please complete the following information):**
- - VMware or VirtualBox version [e.g. 15.5.0 build-14665864]:
- - VirtualKD-Redux version [e.g. 2019.3]:
+ - VirtualKD-Redux version [e.g. 2019.4]:
+ - VMware or VirtualBox version [e.g. VMware Workstation 15.5.0 build-14665864]:
  - OS running on the host [e.g. Windows 10 1903 64-bit]:
  - OS running in the guest VM [e.g. Windows 7 SP1 32-bit]:
 
