@@ -27,10 +27,15 @@ LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "windbg.ico"
+
 IDI_YELLOW              ICON                    "yellow.ico"
+
 IDI_GREEN               ICON                    "green.ico"
+
 IDI_RED                 ICON                    "red.ico"
+
 IDI_GREY                ICON                    "grey.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -89,34 +94,36 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-IDD_MAINDLG DIALOGEX 0, 0, 563, 330
+IDD_MAINDLG DIALOGEX 0, 0, 563, 342
 STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "VirutalKD-Redux Virtual Machine Monitor"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    PUSHBUTTON      "Close",IDCANCEL,493,309,63,14
+    PUSHBUTTON      "Close",IDCANCEL,493,321,63,14
     CONTROL         "",IDC_LIST1,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,429,140
     CONTROL         "Start debugger automatically",IDC_STARTDBG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,271,105,10
     CONTROL         "Stop debugger automatically",IDC_STOPDBG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,284,105,10
-    CONTROL         "WINDBG.EXE",IDC_USEWINDBG,"Button",BS_AUTORADIOBUTTON,121,272,62,10
-    CONTROL         "KD.EXE",IDC_USEKD,"Button",BS_AUTORADIOBUTTON,121,285,42,10
-    PUSHBUTTON      "Run debugger",IDC_RUNDBG,397,265,159,26
+    CONTROL         "WINDBG.EXE",IDC_USEWINDBG,"Button",BS_AUTORADIOBUTTON,121,282,62,10
+    CONTROL         "KD.EXE",IDC_USEKD,"Button",BS_AUTORADIOBUTTON,121,295,42,10
+    PUSHBUTTON      "Run debugger",IDC_RUNDBG,397,271,159,26
     EDITTEXT        IDC_EDIT1,7,169,549,94,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
     LTEXT           "Debug message level:",IDC_DBGMSGTEXT,7,156,71,8
     COMBOBOX        IDC_DBGLEVEL,83,154,339,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "Clear log",IDC_CLEARLOG,427,153,50,14
-    PUSHBUTTON      "Unpatch process",IDC_UNPATCH,397,309,90,14,WS_DISABLED
-    CONTROL         "Custom:",IDC_USECUSTOM,"Button",BS_AUTORADIOBUTTON,121,297,41,10
-    EDITTEXT        IDC_DBGTEMPLATE,169,295,221,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Debugger path...",IDC_DBGPATH,191,281,199,12
+    PUSHBUTTON      "Unpatch process",IDC_UNPATCH,397,321,90,14,WS_DISABLED
+    CONTROL         "Custom:",IDC_USECUSTOM,"Button",BS_AUTORADIOBUTTON,121,311,41,10
+    EDITTEXT        IDC_DBGTEMPLATE,169,309,221,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "WinDbg/KD debugger path...",IDC_DBGPATH,189,287,199,12
     CONTROL         "",IDC_STATS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,442,7,114,140
-    PUSHBUTTON      "TraceAssist params...",IDC_TRACEASSIST,191,266,199,12
+    PUSHBUTTON      "TraceAssist params...",IDC_TRACEASSIST,6,310,105,12
     CONTROL         "DbgBreakPoint() on start",IDC_BREAKIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,298,93,10
     CONTROL         "Log all sent and received packets to kd_<VMNAME>.html files (useful for analyzing debugger protocol)",IDC_LOGPACKETS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,313,338,10
-    PUSHBUTTON      "Restore VM snapshot",IDC_REVERTSNAPSHOT,397,292,90,14
-    PUSHBUTTON      "Instant break",IDC_INSTANTBREAK,493,292,63,14
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,325,338,10
+    PUSHBUTTON      "Restore VM snapshot",IDC_REVERTSNAPSHOT,397,304,90,14
+    PUSHBUTTON      "Instant break",IDC_INSTANTBREAK,493,304,63,14
     PUSHBUTTON      "Cleanup VM List",IDC_CLEANUPVMS,482,153,74,14
+    CONTROL         "WinDbg Preview",IDC_USEWINDBGPREVIEW,"Button",BS_AUTORADIOBUTTON,121,269,68,10
+    GROUPBOX        "",IDC_STATIC,119,277,272,30,0,WS_EX_TRANSPARENT
 END
 
 
@@ -133,7 +140,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 556
         TOPMARGIN, 7
-        BOTTOMMARGIN, 323
+        BOTTOMMARGIN, 335
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -185,6 +192,17 @@ BEGIN
     VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
     VK_F6,          ID_NEXT_PANE,           VIRTKEY 
     VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_MAINDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
 END
 
 

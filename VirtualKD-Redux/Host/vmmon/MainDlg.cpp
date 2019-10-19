@@ -178,6 +178,11 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	case 2:
 		SendDlgItemMessage(IDC_USECUSTOM, BM_SETCHECK, BST_CHECKED);
 		break;
+    case 3:
+        SendDlgItemMessage(IDC_USEWINDBGPREVIEW, BM_SETCHECK, BST_CHECKED);
+        GetDlgItem(IDC_BREAKIN).EnableWindow(FALSE);
+        GetDlgItem(IDC_DBGPATH).EnableWindow(m_Params.ToolsPath.empty() ? TRUE : FALSE);
+        break;
 	}
 
 	OnDebuggerPathChanged();
@@ -233,17 +238,47 @@ void CMainDlg::UpdateParamControls()
 	GetDlgItem(IDC_DBGTEMPLATE).EnableWindow((m_Params.DebuggerType == 2));
 }
 
+void CMainDlg::DebuggerTypeUnCheckHelper()
+{
+    std::vector<std::pair<int, int>> vec{ {0, IDC_USEKD}, {1, IDC_USEWINDBG}, {2, IDC_USECUSTOM}, {3, IDC_USEWINDBGPREVIEW} };
+
+    for (const auto& e : vec)
+    {
+        if (e.first != m_Params.DebuggerType)
+        {
+            BOOL bPreviouslyEnabledState = !GetDlgItem(e.second).EnableWindow();
+            SendDlgItemMessage(e.second, BM_SETCHECK, BST_UNCHECKED);
+            GetDlgItem(e.second).EnableWindow(bPreviouslyEnabledState);
+        }
+    }
+}
+
 LRESULT CMainDlg::OnParamsChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
 	m_Params.AutoInvokeDebugger = ((SendDlgItemMessage(IDC_STARTDBG,  BM_GETCHECK) & BST_CHECKED) != 0);
 	m_Params.AutoCloseDebugger = ((SendDlgItemMessage(IDC_STOPDBG,  BM_GETCHECK) & BST_CHECKED) != 0);
 	m_Params.InitialBreakIn = ((SendDlgItemMessage(IDC_BREAKIN,  BM_GETCHECK) & BST_CHECKED) != 0);
-	if ((SendDlgItemMessage(IDC_USEKD,  BM_GETCHECK) & BST_CHECKED) != 0)
-		m_Params.DebuggerType = 0;
-	else if ((SendDlgItemMessage(IDC_USEWINDBG,  BM_GETCHECK) & BST_CHECKED) != 0)
-		m_Params.DebuggerType = 1;
-	else if ((SendDlgItemMessage(IDC_USECUSTOM,  BM_GETCHECK) & BST_CHECKED) != 0)
-		m_Params.DebuggerType = 2; 
+    if ((SendDlgItemMessage(IDC_USEKD, BM_GETCHECK) & BST_CHECKED) != 0)
+        m_Params.DebuggerType = 0;
+    else if ((SendDlgItemMessage(IDC_USEWINDBG, BM_GETCHECK) & BST_CHECKED) != 0)
+        m_Params.DebuggerType = 1;
+    else if ((SendDlgItemMessage(IDC_USECUSTOM, BM_GETCHECK) & BST_CHECKED) != 0)
+        m_Params.DebuggerType = 2;
+    if ((SendDlgItemMessage(IDC_USEWINDBGPREVIEW, BM_GETCHECK) & BST_CHECKED) != 0)
+    {
+        m_Params.DebuggerType = 3;
+        SendDlgItemMessage(IDC_BREAKIN, BM_SETCHECK, BST_UNCHECKED);
+        GetDlgItem(IDC_BREAKIN).EnableWindow(FALSE);
+        GetDlgItem(IDC_DBGPATH).EnableWindow(m_Params.ToolsPath.empty() ? TRUE : FALSE);
+    }
+    else
+    {
+        GetDlgItem(IDC_BREAKIN).EnableWindow();
+        GetDlgItem(IDC_DBGPATH).EnableWindow();
+    }
+
+    DebuggerTypeUnCheckHelper();
+
 	TCHAR tsz[MAX_PATH * 2];
 	GetDlgItemText(IDC_DBGTEMPLATE, tsz, __countof(tsz));
 	m_Params.CustomDebuggerTemplate = tsz;
@@ -761,33 +796,80 @@ static inline void FindAndReplace(String &src, const String& find, const String&
 	} 
 }
 
+static BOOL IsWindbgPreviewInstalled()
+{
+    SHELLEXECUTEINFOW exInfo = { 0 };
+    exInfo.cbSize = sizeof(exInfo);
+    exInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
+    exInfo.nShow = SW_HIDE;
+    exInfo.lpVerb = L"open";
+    exInfo.lpFile = L"WindbgX.exe";
+    
+    if (ShellExecuteExW(&exInfo) == TRUE)
+    {
+        TerminateProcess(exInfo.hProcess, 0);
+        CloseHandle(exInfo.hProcess);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 void CMainDlg::RunDebugger(unsigned entryIndex)
 {
-	PatchedProcess &proc = m_Processes[entryIndex];
-	if (proc.PipeName.empty())
-		return;
-	String debugger;
-	TCHAR tszCmdLine[MAX_PATH * 2] = {0,};
-	if (m_Params.DebuggerType < 2)
-	{
-		debugger = Path::Combine(m_DbgToolsPath, m_Params.DebuggerType ? _T("windbg.exe") : _T("kd.exe"));
-		LPCTSTR lpFormat = _T("\"%s\" %s-k com:pipe,resets=0,reconnect,port=%s");
-		_sntprintf_s(tszCmdLine, __countof(tszCmdLine), _TRUNCATE, lpFormat, debugger.c_str(), m_Params.InitialBreakIn ? _T("-b ") : _T(""), proc.PipeName.c_str());
-	}
-	else
-	{
-		String cmdLine = m_Params.CustomDebuggerTemplate;
-		FindAndReplace(cmdLine, _T("$(toolspath)"), m_DbgToolsPath);
-		FindAndReplace(cmdLine, _T("$(pipename)"), proc.PipeName.c_str());
-		_tcsncpy(tszCmdLine, cmdLine.c_str(), __countof(tszCmdLine));
-	}
-	STARTUPINFO startupInfo = {0,};
-	startupInfo.cb = sizeof(startupInfo);
-	PROCESS_INFORMATION processInfo = {0,};
-	CreateProcess(debugger.empty() ? NULL : debugger.c_str(), tszCmdLine, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, m_DbgToolsPath.c_str(), &startupInfo, &processInfo);
-	CloseHandle(processInfo.hProcess);
-	CloseHandle(processInfo.hThread);
-	proc.idDebuggerProcess = processInfo.dwProcessId;
+    PatchedProcess &proc = m_Processes[entryIndex];
+    if (proc.PipeName.empty() || proc.idDebuggerProcess == ~0UL)
+        return;
+    String debugger;
+    TCHAR tszCmdLine[MAX_PATH * 2] = { 0, };
+    proc.idDebuggerProcess = ~0UL;
+    if (m_Params.DebuggerType == 0 || m_Params.DebuggerType == 1)
+    {
+        debugger = Path::Combine(m_DbgToolsPath, m_Params.DebuggerType ? _T("windbg.exe") : _T("kd.exe"));
+        LPCTSTR lpFormat = _T("\"%s\" %s-k com:pipe,resets=0,reconnect,port=%s");
+        _sntprintf_s(tszCmdLine, __countof(tszCmdLine), _TRUNCATE, lpFormat, debugger.c_str(), m_Params.InitialBreakIn ? _T("-b ") : _T(""), proc.PipeName.c_str());
+    }
+    else if (m_Params.DebuggerType == 2)
+    {
+        String cmdLine = m_Params.CustomDebuggerTemplate;
+        FindAndReplace(cmdLine, _T("$(toolspath)"), m_DbgToolsPath);
+        FindAndReplace(cmdLine, _T("$(pipename)"), proc.PipeName.c_str());
+        _tcsncpy(tszCmdLine, cmdLine.c_str(), __countof(tszCmdLine));
+    }
+    else if (m_Params.DebuggerType == 3)
+    {
+        LPCTSTR lpFormat = _T("-k com:pipe,resets=0,reconnect,port=%s");
+        _sntprintf_s(tszCmdLine, __countof(tszCmdLine), _TRUNCATE, lpFormat, proc.PipeName.c_str());
+
+        SHELLEXECUTEINFOW exInfo = { 0 };
+        exInfo.cbSize = sizeof(exInfo);
+        exInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
+        exInfo.lpVerb = L"open";
+        exInfo.lpFile = L"WindbgX.exe";
+        exInfo.lpParameters = tszCmdLine;
+        if (ShellExecuteExW(&exInfo) == TRUE)
+        {
+            proc.idDebuggerProcess = GetProcessId(exInfo.hProcess);
+            CloseHandle(exInfo.hProcess);
+        }
+        else
+        {
+            proc.idDebuggerProcess = 0;
+        }
+        return;
+    }
+    else
+    {
+        return;
+    }
+
+    STARTUPINFO startupInfo = { 0, };
+    startupInfo.cb = sizeof(startupInfo);
+    PROCESS_INFORMATION processInfo = { 0, };
+    CreateProcess(debugger.empty() ? NULL : debugger.c_str(), tszCmdLine, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, m_DbgToolsPath.c_str(), &startupInfo, &processInfo);
+    CloseHandle(processInfo.hProcess);
+    CloseHandle(processInfo.hThread);
+    proc.idDebuggerProcess = processInfo.dwProcessId;
 }
 
 
@@ -923,13 +1005,15 @@ void CMainDlg::UpdateUnpatchButton(int SelectionIndex)
 
 void CMainDlg::OnDebuggerPathChanged()
 {
-	bool b = !m_DbgToolsPath.empty();
-	GetDlgItem(IDC_STARTDBG).EnableWindow(b);
-	GetDlgItem(IDC_STOPDBG).EnableWindow(b);
-	GetDlgItem(IDC_USEKD).EnableWindow(b);
-	GetDlgItem(IDC_USEWINDBG).EnableWindow(b);
-	GetDlgItem(IDC_RUNDBG).EnableWindow(b);
-	GetDlgItem(IDC_USECUSTOM).EnableWindow(b);
+	bool bDbgToolsPath = !m_DbgToolsPath.empty();
+    bool bWindbgPreview = IsWindbgPreviewInstalled();
+	GetDlgItem(IDC_STARTDBG).EnableWindow(bDbgToolsPath || bWindbgPreview);
+	GetDlgItem(IDC_STOPDBG).EnableWindow(bDbgToolsPath || bWindbgPreview);
+	GetDlgItem(IDC_USEKD).EnableWindow(bDbgToolsPath);
+	GetDlgItem(IDC_USEWINDBG).EnableWindow(bDbgToolsPath);
+    GetDlgItem(IDC_USEWINDBGPREVIEW).EnableWindow(bWindbgPreview);
+	GetDlgItem(IDC_RUNDBG).EnableWindow(bDbgToolsPath || bWindbgPreview);
+	GetDlgItem(IDC_USECUSTOM).EnableWindow(bDbgToolsPath);
 }
 
 LRESULT CMainDlg::OnBnClickedDbgpath(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
