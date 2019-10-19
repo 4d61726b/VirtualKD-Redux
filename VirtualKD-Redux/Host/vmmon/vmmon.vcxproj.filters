@@ -26,9 +26,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MainDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,9 +39,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\rpcdispatch\trassist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="trparams.h">

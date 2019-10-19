@@ -184,13 +184,11 @@
     <ClCompile Include="vmmon.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="loader.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="PatchList.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="..\rpcdispatch\trassist.h" />
     <ClInclude Include="trparams.h" />
   </ItemGroup>
   <ItemGroup>
