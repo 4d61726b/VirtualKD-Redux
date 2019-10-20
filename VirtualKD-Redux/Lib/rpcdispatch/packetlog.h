@@ -13,27 +13,27 @@
 class PacketLogger
 {
 private:
-	BazisLib::ManagedPointer<BazisLib::AIFile> m_pFile;
-	BazisLib::String m_LogFilePath;
+    BazisLib::ManagedPointer<BazisLib::AIFile> m_pFile;
+    BazisLib::String m_LogFilePath;
 
-	unsigned m_SendPacketNumber;
-	unsigned m_RecvPacketNumber;
-	BazisLib::DateTime m_StartTime;
-	
-	std::wstring m_SessionName;
-	bool m_bTableHeaderPrinted;
+    unsigned m_SendPacketNumber;
+    unsigned m_RecvPacketNumber;
+    BazisLib::DateTime m_StartTime;
+
+    std::wstring m_SessionName;
+    bool m_bTableHeaderPrinted;
 
 public:
-	PacketLogger(const TCHAR *pszKdPipeName);
-	~PacketLogger();
-	
-	void OnSendReceivePacket(bool bLoggingEnabled,
-							 bool bSendPacket,
-							 ULONG PacketType,
-							 PKD_BUFFER FirstBuffer,
-							 PKD_BUFFER SecondBuffer,
-							 PKD_CONTEXT KdContext);
+    PacketLogger(const TCHAR *pszKdPipeName);
+    ~PacketLogger();
 
-	void OnWindowsTerminationSimulated();	
-	void OnWindowsTerminationSimDone(const char *pDebugMsg);
+    void OnSendReceivePacket(bool bLoggingEnabled,
+        bool bSendPacket,
+        ULONG PacketType,
+        PKD_BUFFER FirstBuffer,
+        PKD_BUFFER SecondBuffer,
+        PKD_CONTEXT KdContext);
+
+    void OnWindowsTerminationSimulated();
+    void OnWindowsTerminationSimDone(const char *pDebugMsg);
 };

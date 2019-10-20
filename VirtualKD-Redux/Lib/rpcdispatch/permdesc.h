@@ -10,28 +10,28 @@
 class PermissiveSecurityDescriptor
 {
 private:
-	SECURITY_DESCRIPTOR m_SD;
-	SECURITY_ATTRIBUTES m_SA;
-	bool m_Used;
+    SECURITY_DESCRIPTOR m_SD;
+    SECURITY_ATTRIBUTES m_SA;
+    bool m_Used;
 public:
-	PermissiveSecurityDescriptor()
-		: m_Used(false)
-	{
-		InitializeSecurityDescriptor (&m_SD, SECURITY_DESCRIPTOR_REVISION);
-		SetSecurityDescriptorDacl (&m_SD, TRUE, NULL, FALSE);
-		m_SA.nLength = sizeof(m_SA);
-		m_SA.lpSecurityDescriptor = &m_SD;
-		m_SA.bInheritHandle = FALSE;
-	}
+    PermissiveSecurityDescriptor()
+        : m_Used(false)
+    {
+        InitializeSecurityDescriptor(&m_SD, SECURITY_DESCRIPTOR_REVISION);
+        SetSecurityDescriptorDacl(&m_SD, TRUE, NULL, FALSE);
+        m_SA.nLength = sizeof(m_SA);
+        m_SA.lpSecurityDescriptor = &m_SD;
+        m_SA.bInheritHandle = FALSE;
+    }
 
-	operator SECURITY_ATTRIBUTES *()
-	{
-		m_Used = true;
-		return &m_SA;
-	}
+    operator SECURITY_ATTRIBUTES *()
+    {
+        m_Used = true;
+        return &m_SA;
+    }
 
-	~PermissiveSecurityDescriptor()
-	{
-		ASSERT(m_Used);
-	}
+    ~PermissiveSecurityDescriptor()
+    {
+        ASSERT(m_Used);
+    }
 };
