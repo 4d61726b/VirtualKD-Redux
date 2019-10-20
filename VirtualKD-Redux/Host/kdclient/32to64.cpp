@@ -155,7 +155,7 @@ static ActionStatus TryCall64BitClientUsingRundll(KDClientCommand cmd, unsigned 
 
     TCHAR tszModule[MAX_PATH + 6] = { 0, };
     GetModuleFileName(g_hThisDll, tszModule, __countof(tszModule));
-    TCHAR *p = _tcsrchr(tszModule, '.');
+    TCHAR *p = _tcsrchr(tszModule, '3');
     if (!p)
         return MAKE_STATUS(UnknownError);
     _tcsncpy(p, _T("64.dll"), __countof(tszModule) - (p - tszModule));
