@@ -458,20 +458,34 @@ unsigned GetVMPipeNameW(unsigned PID, wchar_t *pName, size_t MaxNameLength, bool
         if (pStatus)
             oldVersion = pStatus->HostSideDLLVersion;
 
-        oldVersion >>= 16;
-        newVersion >>= 16;
-
         s_bUserWarnedAboutVersion = true;
-        MessageBox(0,
-            BazisLib::String::sFormat(_T("One of the virtual machines has an old version of KDCLIENT.DLL/VBOXDD.DLL loaded (%d.%d.%d expected, %d.%d.%d found). Please install the latest file versions, as described on VirtualKD-Redux website, and restart your virtual machines."),
-            (oldVersion >> 12) & 0x0F,
-                (oldVersion >> 8) & 0x0F,
-                (oldVersion >> 4) & 0x0F,
-                (newVersion >> 12) & 0x0F,
-                (newVersion >> 8) & 0x0F,
-                (newVersion >> 4) & 0x0F).c_str(),
-            _T("VirtualKD-Redux"),
-            MB_ICONWARNING | MB_TASKMODAL);
+
+        // Old version format (VirtualKD or VirtualKD-Redux <= 2019.5)
+        if ((oldVersion >> 16) <= 0x101)
+        {
+            oldVersion >>= 16;
+
+            MessageBox(0,
+                BazisLib::String::sFormat(_T("One of the virtual machines has an old version of KDCLIENT.DLL/VBOXDD.DLL loaded (%u.%u expected, %u.%u.%u found). Please install the latest file versions, as described on VirtualKD-Redux website, and restart your virtual machines."),
+                (newVersion >> 16) & 0xFFFF,
+                    newVersion & 0xFF,
+                    (oldVersion >> 12) & 0x0F,
+                    (oldVersion >> 8) & 0x0F,
+                    (oldVersion >> 4) & 0x0F).c_str(),
+                _T("VirtualKD-Redux"),
+                MB_ICONWARNING | MB_TASKMODAL);
+        }
+        else // New version format
+        {
+            MessageBox(0,
+                BazisLib::String::sFormat(_T("One of the virtual machines has an old version of KDCLIENT.DLL/VBOXDD.DLL loaded (%u.%u expected, %u.%u found). Please install the latest file versions, as described on VirtualKD-Redux website, and restart your virtual machines."),
+                (newVersion >> 16) & 0xFFFF,
+                    newVersion & 0xFFFF,
+                    oldVersion & 0xFFFF,
+                    (oldVersion >> 16) & 0xFFFF).c_str(),
+                _T("VirtualKD-Redux"),
+                MB_ICONWARNING | MB_TASKMODAL);
+        }
     }
 
     UnmapViewOfFile(pStatus);

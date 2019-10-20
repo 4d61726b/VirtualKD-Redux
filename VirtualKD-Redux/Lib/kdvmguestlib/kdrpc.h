@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "vkdversion.h"
+
 //! \ref guestrpc command name for VirtualKD requests
 static char g_szRPCCommandHeader[] = "~kdVMvA ";
 static char g_szRPCReplySignature[] = "++kdVMvA ";
@@ -34,7 +36,7 @@ enum RpcCommand
 #ifdef VKD_EXPERIMENTAL_PACKET_POLL_DIVIDER_SUPPORT
 enum {KDRPC_PROTOCOL_VERSION = 0x250};
 #else
-enum {KDRPC_PROTOCOL_VERSION = 0x101};
+enum {KDRPC_PROTOCOL_VERSION = VIRTUALKD_VER_INT};
 #endif
 
 enum KDRPCGlobalFlags

@@ -30,7 +30,7 @@ public:
 		__in_opt PKD_BUFFER SecondBuffer,
 		__inout PKD_CONTEXT KdContext)=0;
 
-	virtual void ReportProtocolVersionError(int GuestVersion, int HostVersion)=0;
+	virtual void ReportProtocolVersionError(unsigned GuestVersion, unsigned HostVersion)=0;
 	virtual void SetKdDebuggerFlags(bool KdDebuggerNotPresent, unsigned char KdDebuggerEnabled)=0;
 	virtual void GetKdDebuggerFlags(bool *pKdDebuggerNotPresent, unsigned char *pKdDebuggerEnabled)=0;
 

@@ -26,7 +26,10 @@ struct KdClientStatus
 	unsigned BytesDropped;
 	//! Contains ErrorCode + 1. Default file mapping value of 0 corresponds to PENDING state.
 	unsigned PatchErrorPlus1;
-	unsigned ProtocolMismatchStatus;
+    struct ProtocolMismatchStatus {
+        unsigned GuestVersion;
+        unsigned HostVersion;
+    } ProtocolMismatchStatus;
 	
 	//Added in version 1.2
 	unsigned LogAllPackets;

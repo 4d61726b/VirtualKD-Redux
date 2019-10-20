@@ -631,14 +631,25 @@ void CMainDlg::PerformProcessActions(PatchedProcess &proc, TimeSpan &runTime, bo
                 proc.State = PatchFailed;
             }
         }
-        if (proc.pStatus->ProtocolMismatchStatus)
+        if (*((UINT64*)&proc.pStatus->ProtocolMismatchStatus))
         {
             proc.State = ProtocolMismatch;
-            WORD expected = HIWORD(proc.pStatus->ProtocolMismatchStatus), found = LOWORD(proc.pStatus->ProtocolMismatchStatus);
-            proc.pStatus->ProtocolMismatchStatus = 0;
+            DWORD expected = proc.pStatus->ProtocolMismatchStatus.HostVersion, found = proc.pStatus->ProtocolMismatchStatus.GuestVersion;
+            proc.pStatus->ProtocolMismatchStatus = { 0 };
             TCHAR tsz[256];
-            _sntprintf(tsz, __countof(tsz), _T("Warning! KDBAZIS.DLL version %x.%02x was loaded by virtual machine, while version %x.%02x was expected. Debugging functions disabled!"),
-                HIBYTE(found), LOBYTE(found), HIBYTE(expected), LOBYTE(expected));
+            
+            // Old version format (VirtualKD or VirtualKD-Redux <= 2019.5)
+            if (found <= 0x101)
+            {
+                _sntprintf(tsz, __countof(tsz), _T("Warning! KDBAZIS.DLL version %x.%02x was loaded by the virtual machine, while version %u.%u was expected. Debugging functions disabled!"),
+                    HIBYTE(found), LOBYTE(found), (expected >> 16) & 0xFFFF, expected & 0xFF);
+            }
+            else // New version format
+            {
+                _sntprintf(tsz, __countof(tsz), _T("Warning! KDBAZIS.DLL version %u.%u was loaded by the virtual machine, while version %u.%u was expected. Debugging functions disabled!"),
+                    (found >> 16) & 0xFFFF, found & 0xFF, (expected >> 16) & 0xFFFF, expected & 0xFF);
+            }
+
             MessageBox(tsz, _T("Invalid KDBAZIS.DLL version"), MB_ICONWARNING);
         }
     }

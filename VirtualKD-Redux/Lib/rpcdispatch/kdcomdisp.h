@@ -141,7 +141,7 @@ public:
 								 PKD_CONTEXT KdContext);
 	
 	//! Called by KdRpcDispatcher to report protocol version mismatch
-	virtual void ReportProtocolVersionError(int GuestVersion, int HostVersion);
+	virtual void ReportProtocolVersionError(unsigned GuestVersion, unsigned HostVersion);
 
 
 	//! Sends a packet stating that NTOSKRNL was unloaded, that makes WinDbg/DBGENG end the session and prevents it from hanging when VM unloads.

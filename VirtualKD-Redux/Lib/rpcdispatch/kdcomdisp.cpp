@@ -568,9 +568,9 @@ bool __stdcall KdComDispatcher::KdSendPacket(ULONG PacketType,
 	}
 }
 
-void KdComDispatcher::ReportProtocolVersionError(int GuestVersion, int HostVersion)
+void KdComDispatcher::ReportProtocolVersionError(unsigned GuestVersion, unsigned HostVersion)
 {
-	g_pReporter->GetStatusPointer()->ProtocolMismatchStatus = MAKELONG(GuestVersion, HostVersion);
+    g_pReporter->GetStatusPointer()->ProtocolMismatchStatus = { GuestVersion, HostVersion };
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
