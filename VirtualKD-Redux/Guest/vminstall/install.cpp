@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <Windows.h>
+
 #include <BazisLib/bzshlp/Win32/BCD.h>
 #include <BazisLib/bzscore/strfast.h>
 #include "bootedit.h"
@@ -33,8 +36,36 @@ ActionStatus FindBestOSEntry(ManagedPointer<AIBootConfigurationEntry> *ppEntry, 
             if (!pCurrentOSEntry)
                 pCurrentOSEntry = pEntry;
 
-            if ((pEntry->GetDebuggerMode() == kdCustom) && (!pEntry->GetCustomKDName().icompare(_T("kdbazis.dll"))))
+            if (pEntry->GetDebuggerMode() == kdCustom)
             {
+                WCHAR wcsBuf[MAX_PATH];
+                String strFullPath;
+                DWORD dwVerSize;
+                DWORD dwVerSizeHandle = 0;
+                String strData;
+                UINT uiValLen = 0;
+                WCHAR* wcsProductName;
+
+                if (GetSystemDirectoryW(wcsBuf, _countof(wcsBuf)) == FALSE)
+                    continue;
+
+                strFullPath = wcsBuf + String(L"\\") + pEntry->GetCustomKDName();
+                dwVerSize = GetFileVersionInfoSizeW(strFullPath.c_str(), &dwVerSizeHandle);
+
+                if (!dwVerSize)
+                    continue;
+
+                strData.resize(dwVerSize, L'\0');
+
+                if (GetFileVersionInfoW(strFullPath.c_str(), 0, dwVerSize, (LPVOID)strData.data()) == FALSE)
+                    continue;
+
+                if (VerQueryValueW(strData.data(), L"\\StringFileInfo\\000904B0\\ProductName", (LPVOID*)&wcsProductName, &uiValLen) == FALSE)
+                    continue;
+
+                if (wcscmp(wcsProductName, L"VirtualKD-Redux") != 0)
+                    continue;
+
                 pCurrentOSEntry = pEntry;
                 if (pbAlreadyInstalled)
                     *pbAlreadyInstalled = true;

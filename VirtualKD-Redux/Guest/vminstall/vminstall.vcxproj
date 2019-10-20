@@ -70,6 +70,7 @@
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -95,6 +96,7 @@
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <SubSystem>Windows</SubSystem>
       <ForceFileOutput>MultiplyDefinedSymbolOnly</ForceFileOutput>
+      <AdditionalDependencies>Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -121,6 +123,7 @@
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +148,7 @@
     <Link>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

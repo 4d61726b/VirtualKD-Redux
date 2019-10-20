@@ -69,7 +69,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
     }
 
     m_ExistingEntryName = pEntry->GetDescription();
-    SetDlgItemText(IDC_REUSEENTRY, String::sFormat(_T("Use existing entry (%s)"), m_ExistingEntryName.c_str()).c_str());
+    SetDlgItemText(IDC_REUSEENTRY, String::sFormat(_T("Use existing entry \"%s\""), m_ExistingEntryName.c_str()).c_str());
     SendDlgItemMessage(IDC_SETDEFAULT, BM_SETCHECK, BST_CHECKED);
     SendDlgItemMessage(IDC_KDCOM, BM_SETCHECK, BST_CHECKED);
 
