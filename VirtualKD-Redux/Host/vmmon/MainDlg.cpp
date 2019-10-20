@@ -641,12 +641,12 @@ void CMainDlg::PerformProcessActions(PatchedProcess &proc, TimeSpan &runTime, bo
             // Old version format (VirtualKD or VirtualKD-Redux <= 2019.5)
             if (found <= 0x101)
             {
-                _sntprintf(tsz, __countof(tsz), _T("Warning! KDBAZIS.DLL version %x.%02x was loaded by the virtual machine, while version %u.%u was expected. Debugging functions disabled!"),
+                _sntprintf(tsz, __countof(tsz), _T("Warning! KDBAZIS.DLL version %x.%02x was loaded by the virtual machine, while version %u.%u was expected. Please upgrade VirtualKD-Redux in the virtual machine. Debugging functions disabled!"),
                     HIBYTE(found), LOBYTE(found), (expected >> 16) & 0xFFFF, expected & 0xFF);
             }
             else // New version format
             {
-                _sntprintf(tsz, __countof(tsz), _T("Warning! KDBAZIS.DLL version %u.%u was loaded by the virtual machine, while version %u.%u was expected. Debugging functions disabled!"),
+                _sntprintf(tsz, __countof(tsz), _T("Warning! KDBAZIS.DLL version %u.%u was loaded by the virtual machine, while version %u.%u was expected. Please upgrade VirtualKD-Redux in the virtual machine. Debugging functions disabled!"),
                     (found >> 16) & 0xFFFF, found & 0xFF, (expected >> 16) & 0xFFFF, expected & 0xFF);
             }
 
