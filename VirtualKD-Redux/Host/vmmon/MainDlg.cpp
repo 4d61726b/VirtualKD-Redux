@@ -18,6 +18,8 @@
 #include "../kdclient/patchapi.h"
 #include "rpcdispatch/permdesc.h"
 
+#include "vkdversion.h"
+
 enum
 {
     ProcessInactive,
@@ -227,7 +229,11 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
     if (BazisLib::WOW64APIProvider::sIsWow64Process())
     {
-        SetWindowText(_T("VirutalKD-Redux Virtual Machine monitor (32-bit version on 64-bit windows). Use VMMON64.EXE instead."));
+        SetWindowTextA(m_hWnd, "VirtualKD-Redux Virtual Machine Monitor " VIRTUALKD_REDUX_VERSION_STR " (32-bit version on 64-bit windows). Use VMMON64.EXE instead.");
+    }
+    else
+    {
+        SetWindowTextA(m_hWnd, "VirtualKD-Redux Virtual Machine Monitor " VIRTUALKD_REDUX_VERSION_STR);
     }
 
     return bHandled = FALSE;

@@ -55,7 +55,7 @@ END
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION VMMON_EXE_VER
- PRODUCTVERSION VIRTUALKD_VERSION
+ PRODUCTVERSION VIRTUALKD_REDUX_VERSION
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,14 +72,14 @@ BEGIN
         BEGIN
             VALUE "Comments", COMMENTS_STR
             VALUE "CompanyName", COMPANY_STR
-            VALUE "FileDescription", "VirutalKD-Redux Virtual Machine Monitor"
+            VALUE "FileDescription", "VirtualKD-Redux Virtual Machine Monitor"
             VALUE "FileVersion", VMMON_EXE_VER_STR
             VALUE "InternalName", "vmmon"
             VALUE "LegalCopyright", COPYRIGHT_STR
             VALUE "LegalTrademarks", TRADEMARKS_STR
             VALUE "OriginalFilename", "vmmon.exe"
             VALUE "ProductName", PRODUCTNAME_STR
-            VALUE "ProductVersion", VIRTUALKD_VERSION_STR
+            VALUE "ProductVersion", VIRTUALKD_REDUX_VERSION_STR
         END
     END
     BLOCK "VarFileInfo"

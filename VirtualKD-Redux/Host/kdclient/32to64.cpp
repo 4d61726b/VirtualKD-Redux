@@ -282,7 +282,7 @@ ULONGLONG Call64BitKDCLIENT(KDClientCommand cmd, unsigned PID, LPWSTR lpStringRe
         String vmmonExe = Path::Combine(Path::GetDirectoryName(TempStrPointerWrapper(tszModule)), WOW64APIProvider::sIsWow64Process() ? _T("vmmon64.exe") : _T("vmmon.exe"));
         if (File::Exists(vmmonExe))
         {
-            switch (MessageBox(HWND_DESKTOP, _T("Failed to quesy VM information. This is most likely caused by insufficient privilege level. Do you want to start Virtual Machine monitor (VMMON) in Administrator mode to fix this problem?"), _T("VirtualKD-Redux"), MB_ICONQUESTION | MB_TOPMOST | MB_YESNO))
+            switch (MessageBox(HWND_DESKTOP, _T("Failed to query VM information. This is most likely caused by insufficient privilege level. Do you want to start Virtual Machine monitor (VMMON) in Administrator mode to fix this problem?"), _T("VirtualKD-Redux"), MB_ICONQUESTION | MB_TOPMOST | MB_YESNO))
             {
             case IDYES:
                 break;
@@ -292,7 +292,7 @@ ULONGLONG Call64BitKDCLIENT(KDClientCommand cmd, unsigned PID, LPWSTR lpStringRe
         }
         else
         {
-            MessageBox(HWND_DESKTOP, _T("Failed to quesy VM information. This is most likely caused by insufficient privilege level. Running VMMON/VMMON64 will solve the problem."), _T("VirtualKD-Redux"), MB_ICONERROR | MB_TOPMOST | MB_OK);
+            MessageBox(HWND_DESKTOP, _T("Failed to query VM information. This is most likely caused by insufficient privilege level. Running VMMON/VMMON64 will solve the problem."), _T("VirtualKD-Redux"), MB_ICONERROR | MB_TOPMOST | MB_OK);
             return -1;
         }
 

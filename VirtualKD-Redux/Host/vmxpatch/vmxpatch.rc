@@ -55,7 +55,7 @@ END
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION VMXPATCH_EXE_VER
- PRODUCTVERSION VIRTUALKD_VERSION
+ PRODUCTVERSION VIRTUALKD_REDUX_VERSION
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,14 +72,14 @@ BEGIN
         BEGIN
             VALUE "Comments", COMMENTS_STR
             VALUE "CompanyName", COMPANY_STR
-            VALUE "FileDescription", "Command-line VM patcher"
+            VALUE "FileDescription", "Command Line VM Patcher"
             VALUE "FileVersion", VMXPATCH_EXE_VER_STR
             VALUE "InternalName", "vmxpatch"
             VALUE "LegalCopyright", COPYRIGHT_STR
             VALUE "LegalTrademarks", TRADEMARKS_STR
             VALUE "OriginalFilename", "vmxpatch.exe"
             VALUE "ProductName", PRODUCTNAME_STR
-            VALUE "ProductVersion", VIRTUALKD_VERSION_STR
+            VALUE "ProductVersion", VIRTUALKD_REDUX_VERSION_STR
         END
     END
     BLOCK "VarFileInfo"
