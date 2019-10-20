@@ -26,6 +26,14 @@ bool IsWin8OrLater()
     return (ver >= 0x602);
 }
 
+static bool IsWin10()
+{
+    String strProductName;
+    RegistryKey key2(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
+    strProductName = (String)key2[L"ProductName"];
+    return (strProductName.ifind(L"windows 10 ") == 0 || strProductName.icompare(L"windows 10") == 0);
+}
+
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
     // center the dialog on the screen
@@ -71,7 +79,11 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
     m_ExistingEntryName = pEntry->GetDescription();
     SetDlgItemText(IDC_REUSEENTRY, String::sFormat(_T("Use existing entry \"%s\""), m_ExistingEntryName.c_str()).c_str());
     SendDlgItemMessage(IDC_SETDEFAULT, BM_SETCHECK, BST_CHECKED);
-    SendDlgItemMessage(IDC_KDCOM, BM_SETCHECK, BST_CHECKED);
+
+    if (IsWin10())
+    {
+        SendDlgItemMessage(IDC_KDCOM, BM_SETCHECK, BST_CHECKED);
+    }
 
     SendDlgItemMessage(bAlreadyInstalled ? IDC_REUSEENTRY : IDC_NEWENTRY, BM_SETCHECK, BST_CHECKED);
     ::EnableWindow(GetDlgItem(IDC_ENTRYNAME), !bAlreadyInstalled);

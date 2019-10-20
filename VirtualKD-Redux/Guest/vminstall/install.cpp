@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 
+#include <BazisLib/bzscore/file.h>
 #include <BazisLib/bzshlp/Win32/BCD.h>
 #include <BazisLib/bzscore/strfast.h>
 #include "bootedit.h"
@@ -48,8 +49,8 @@ ActionStatus FindBestOSEntry(ManagedPointer<AIBootConfigurationEntry> *ppEntry, 
 
                 if (GetSystemDirectoryW(wcsBuf, _countof(wcsBuf)) == FALSE)
                     continue;
-
-                strFullPath = wcsBuf + String(L"\\") + pEntry->GetCustomKDName();
+                
+                strFullPath = Path::Combine(wcsBuf, pEntry->GetCustomKDName());
                 dwVerSize = GetFileVersionInfoSizeW(strFullPath.c_str(), &dwVerSizeHandle);
 
                 if (!dwVerSize)
