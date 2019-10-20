@@ -22,63 +22,63 @@ static char g_szRPCReplySignature[] = "++kdVMvA ";
 //! Specifies possible \ref guestrpc request subtypes for \ref kdrpc_proto "KDRPC protocol"
 enum RpcCommand
 {
-	//! Test connection with KDCLIENT.DLL. Can also be used for benchmarking.
-	TestConnection = 't',
-	//! Executes KdReceivePacket() on host side
-	ReceivePacket = 'r',
-	//! Executes KdSendPacket() on host side
-	SendPacket = 's',
-	//! Reports KDVM.DLL protocol version and requests KDCLIENT.DLL protocol version
-	VersionReport = 'v',
+    //! Test connection with KDCLIENT.DLL. Can also be used for benchmarking.
+    TestConnection = 't',
+    //! Executes KdReceivePacket() on host side
+    ReceivePacket = 'r',
+    //! Executes KdSendPacket() on host side
+    SendPacket = 's',
+    //! Reports KDVM.DLL protocol version and requests KDCLIENT.DLL protocol version
+    VersionReport = 'v',
 };
 
 //! Specifies present protocol version
 #ifdef VKD_EXPERIMENTAL_PACKET_POLL_DIVIDER_SUPPORT
-enum {KDRPC_PROTOCOL_VERSION = 0x250};
+enum { KDRPC_PROTOCOL_VERSION = 0x250 };
 #else
-enum {KDRPC_PROTOCOL_VERSION = VIRTUALKD_VER_INT};
+enum { KDRPC_PROTOCOL_VERSION = VIRTUALKD_VER_INT };
 #endif
 
 enum KDRPCGlobalFlags
 {
-	kKDDebuggerNotPresentSet = 0x01,
-	kRetryKdSendPacket = 0x02,
-	kKDDebuggerEnabledValueAvailable = 0x04,	//Value is sent in the 2nd byte (0xFF00 mask)
+    kKDDebuggerNotPresentSet = 0x01,
+    kRetryKdSendPacket = 0x02,
+    kKDDebuggerEnabledValueAvailable = 0x04,	//Value is sent in the 2nd byte (0xFF00 mask)
 };
 
 /*!
-	\page kdrpc_proto KDRPC protocol version A
-	Each KDRPC request is executed via \ref guestrpc. A handler is invoked inside 
-	KDCLIENT.DLL running in VMWARE-VMX.EXE address space.<br/>
-	Request format: [header][command][body]<br/>
-	Reply format: [signature][specific info]<br/>
-	
-	\section kdrpc_cmds Commands
-	The following commands are supported by KDRPC:
-	\subsection kdrpc_t Connection test
-	Body: char array of KDRPC_TEST_BUFFER_SIZE, arr[i] = i & 0xFF;<br/>
-	Reply: exact array filled by rule arr[i] = (i ^ 0x55) & 0xFF;<br/>
+    \page kdrpc_proto KDRPC protocol version A
+    Each KDRPC request is executed via \ref guestrpc. A handler is invoked inside
+    KDCLIENT.DLL running in VMWARE-VMX.EXE address space.<br/>
+    Request format: [header][command][body]<br/>
+    Reply format: [signature][specific info]<br/>
 
-	\subsection kdrpc_r Receive Packet
-	Body:  [packet type:ULONG][globals:4][1st data:SendableKdBuffer][2nd data:SendableKdBuffer][context:KD_CONTEXT]<br/>
-	Reply: ['r'][1st data:SendableKdBuffer][2nd data:SendableKdBuffer][context:KD_CONTEXT][code:4][PayloadBytes:4][size1:4][size2:4][globals:4][data]<br/>
+    \section kdrpc_cmds Commands
+    The following commands are supported by KDRPC:
+    \subsection kdrpc_t Connection test
+    Body: char array of KDRPC_TEST_BUFFER_SIZE, arr[i] = i & 0xFF;<br/>
+    Reply: exact array filled by rule arr[i] = (i ^ 0x55) & 0xFF;<br/>
 
-	\subsection kdrpc_s Send Packet
-	Body:  [1st data:SendableKdBuffer][2nd data:SendableKdBuffer][context:KD_CONTEXT][packet type:4][size1:4][size2:4][globals:4][data]<br/>
-	Reply: ['s'][context:KD_CONTEXT]<br/>
+    \subsection kdrpc_r Receive Packet
+    Body:  [packet type:ULONG][globals:4][1st data:SendableKdBuffer][2nd data:SendableKdBuffer][context:KD_CONTEXT]<br/>
+    Reply: ['r'][1st data:SendableKdBuffer][2nd data:SendableKdBuffer][context:KD_CONTEXT][code:4][PayloadBytes:4][size1:4][size2:4][globals:4][data]<br/>
 
-	\subsection kdrpc_v Report version
-	Body:  [KDVM.DLL protocol version:4]<br/>
-	Reply: [KDCLIENT.DLL protocol version:4]<br/>
+    \subsection kdrpc_s Send Packet
+    Body:  [1st data:SendableKdBuffer][2nd data:SendableKdBuffer][context:KD_CONTEXT][packet type:4][size1:4][size2:4][globals:4][data]<br/>
+    Reply: ['s'][context:KD_CONTEXT]<br/>
+
+    \subsection kdrpc_v Report version
+    Body:  [KDVM.DLL protocol version:4]<br/>
+    Reply: [KDCLIENT.DLL protocol version:4]<br/>
 */
 
 //! Specifies buffer size for RpcCommand::TestConnection requests
-enum {KDRPC_TEST_BUFFER_SIZE = 512};
+enum { KDRPC_TEST_BUFFER_SIZE = 512 };
 
 //! Specifies number of additional integer parameters used by \ref kdrpc_proto "KDRPC protocol"
 
 #ifdef VKD_EXPERIMENTAL_PACKET_POLL_DIVIDER_SUPPORT
-enum {KDRPC_RECV_RETURNED_ULONGS = 6, KDRPC_SEND_PASSED_ULONGS = 4};
+enum { KDRPC_RECV_RETURNED_ULONGS = 6, KDRPC_SEND_PASSED_ULONGS = 4 };
 #else
-enum {KDRPC_RECV_RETURNED_ULONGS = 5, KDRPC_SEND_PASSED_ULONGS = 4};
+enum { KDRPC_RECV_RETURNED_ULONGS = 5, KDRPC_SEND_PASSED_ULONGS = 4 };
 #endif
