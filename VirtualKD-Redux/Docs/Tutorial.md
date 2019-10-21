@@ -12,7 +12,7 @@
 
 4. Select "Disable Driver Signature Enforcement" and boot the OS.
 
-:bulb: You can use virtual machine snapshots to avoid having to perform these steps every time. Once the final step is completed and the OS has successfully booted, make a snapshot that can later be restored.
+:bulb: You can use virtual machine snapshots to avoid having to perform these steps every time. Once the final step is completed and the OS has successfully booted, make a snapshot that can later be restored. **It is important to note that if a newer version of VirtualKD-Redux is installed on the host, then the guest VM must also be updated and vice versa. It is strongly recommended to make a new snapshot after upgrading and rebooting the guest VM.**
 
 ## Host
 
