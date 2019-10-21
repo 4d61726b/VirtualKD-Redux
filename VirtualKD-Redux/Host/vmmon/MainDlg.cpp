@@ -631,7 +631,7 @@ void CMainDlg::PerformProcessActions(PatchedProcess &proc, TimeSpan &runTime, bo
                 proc.State = PatchFailed;
             }
         }
-        if (*((UINT64*)&proc.pStatus->ProtocolMismatchStatus))
+        if (proc.pStatus->ProtocolMismatchStatus.HostVersion || proc.pStatus->ProtocolMismatchStatus.GuestVersion)
         {
             proc.State = ProtocolMismatch;
             DWORD expected = proc.pStatus->ProtocolMismatchStatus.HostVersion, found = proc.pStatus->ProtocolMismatchStatus.GuestVersion;
