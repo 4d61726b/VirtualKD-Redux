@@ -105,7 +105,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
     else
     {
         SendDlgItemMessage(IDC_ADDSUFFIX, BM_SETCHECK, BST_CHECKED);
-        SetDlgItemText(IDC_ENTRYNAME, IsVistaOrLater() ? _T("Disable Signature Enforcement Manually!!! (Press F8) ") : _T("") _T("[VKD-Redux]"));
+        SetDlgItemText(IDC_ENTRYNAME, IsVistaOrLater() ? _T("Disable Signature Enforcement Manually!!! (Press F8) [VKD-Redux]") : _T("[VKD-Redux]"));
     }
 
     SetDlgItemInt(IDC_TIMEOUT, pEditor->GetTimeout());
