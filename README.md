@@ -3,8 +3,8 @@
 
 ## Features
 
-* Support for the latest VMware Workstation (Currently 15.5.2)
-* Support for the latest Windows 10 (Currently 1909)
+* Support for the latest VMware Workstation (15.5.2) as well as the latest [VMware Workstation Tech Preview (20H1) build](https://blogs.vmware.com/workstation/2020/03/vmware-workstation-20h1-tech-preview-new-build-available.html)
+* Support starting with Windows XP up to the latest Windows 10 (Currently 1909)
 * Support for the latest [WinDbg Preview](https://www.microsoft.com/en-us/p/windbg-preview/9pgjgd53tn86)
 * Toolchain modernization. Builds with Visual Studio 2017
 * Simplified build system. No additional libraries required
