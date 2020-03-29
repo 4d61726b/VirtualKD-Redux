@@ -73,5 +73,8 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="$(SolutionDir)Build\$(Platform)\$(Configuration)\kdbazis.dll" />
+    <None Include="legacy32.asm">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

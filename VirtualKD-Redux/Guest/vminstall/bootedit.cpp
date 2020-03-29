@@ -819,8 +819,18 @@ namespace BootIniEditor
 
         RegistryKey key(HKEY_LOCAL_MACHINE, _T("SYSTEM\\CurrentControlSet\\Control"));
         DynamicStringA systemBootDevice = StringToANSIString(key[_T("SystemBootDevice")]);
-        if (systemBootDevice.icompare(deviceAndDir.left))
-            return false;
+
+        if (systemBootDevice.empty() && m_pEditor->GetEntryCount() == 1)
+        {
+            // Old version of Windows that predates SystemBootDevice. Since there is only one entry, its generally safe
+            // to say that this is the correct entry. This should be safe to set since it wasn't used.
+            key[L"SystemBootDevice"].SetValueEx(ANSIStringToString(deviceAndDir.left).c_str(), (DWORD)(deviceAndDir.left.length() + 1) * sizeof(WCHAR), REG_SZ);
+        }
+        else
+        {
+            if (systemBootDevice.icompare(deviceAndDir.left))
+                return false;
+        }
 
         char szWinDir[MAX_PATH] = { 0, };
         GetWindowsDirectoryA(szWinDir, __countof(szWinDir));

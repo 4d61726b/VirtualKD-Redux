@@ -18,12 +18,20 @@
 using namespace BazisLib;
 using namespace BootEditor;
 
+bool IsVistaOrLater()
+{
+    OSVERSIONINFO info = { sizeof(info) };
+    GetVersionEx(&info);
+    int ver = (info.dwMajorVersion << 8) | info.dwMinorVersion;
+    return (ver >= 0x0600);
+}
+
 bool IsWin8OrLater()
 {
     OSVERSIONINFO info = { sizeof(info) };
     GetVersionEx(&info);
     int ver = (info.dwMajorVersion << 8) | info.dwMinorVersion;
-    return (ver >= 0x602);
+    return (ver >= 0x0602);
 }
 
 static bool IsWin10()
@@ -97,7 +105,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
     else
     {
         SendDlgItemMessage(IDC_ADDSUFFIX, BM_SETCHECK, BST_CHECKED);
-        SetDlgItemText(IDC_ENTRYNAME, _T("Disable Signature Enforcement Manually!!! (Press F8) [VKD-Redux]"));
+        SetDlgItemText(IDC_ENTRYNAME, IsVistaOrLater() ? _T("Disable Signature Enforcement Manually!!! (Press F8) ") : _T("") _T("[VKD-Redux]"));
     }
 
     SetDlgItemInt(IDC_TIMEOUT, pEditor->GetTimeout());
@@ -311,8 +319,10 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
         }
         else
         {
-            MessageBox(_T("Warning: You will have to disable driver signature enforcement MANUALLY at every boot to use VirtualKD-Redux! Please refer to https://git.io/JelPr for more details!"), _T("Warning"), MB_ICONWARNING);
-
+            if (IsVistaOrLater())
+            {
+                MessageBox(_T("Warning: You will have to disable driver signature enforcement MANUALLY at every boot to use VirtualKD-Redux! Please refer to https://git.io/JelPr for more details!"), _T("Warning"), MB_ICONWARNING);
+            }
             if (MessageBox(_T("VirtualKD-Redux was successfully installed. Please do not forget to run VMMON.EXE on the host machine, or use VisualDDK for debugging.\r\nDo you want to restart your computer now?"),
                 _T("Question"),
                 MB_ICONQUESTION | MB_YESNO) == IDYES)

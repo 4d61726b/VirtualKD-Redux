@@ -15,6 +15,17 @@ CAppModule _Module;
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
+    LPCWSTR szMutexName = L"Global\\virtualkd_redux_vmmon";
+    HANDLE hMutex = CreateMutexW(NULL, TRUE, szMutexName);
+    if (hMutex)
+    {
+        if (GetLastError() == ERROR_ALREADY_EXISTS)
+        {
+            MessageBoxW(NULL, L"VirtualKD-Redux Virtual Machine Monitor is already running.", L"Error", MB_ICONERROR);
+            return 1;
+        }
+    }
+
     BazisLib::MemoryLeakDetector leakDetector;
     UNREFERENCED_PARAMETER(leakDetector);
     //HRESULT hRes = ::CoInitialize(NULL);
@@ -42,7 +53,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     ::CoUninitialize();
 
     //C_ASSERT(sizeof(void *) == sizeof(CMainDlg::OnAppAbout));
-
+    if (hMutex)
+    {
+        ReleaseMutex(hMutex);
+        CloseHandle(hMutex);
+    }
 
     return nRet;
 }

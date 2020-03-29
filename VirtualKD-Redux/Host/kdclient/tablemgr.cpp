@@ -154,7 +154,7 @@ bool PatchInfoDatabase::AddRecord(void *pPEHeader, LPVOID lpDispatcherTable, uns
 
 IRPCTableManager* RPCTableManagerFactory(HINSTANCE hThisDLL, DWORD dwVersionMajor, DWORD dwVersionMinor, DWORD dwVersionBugFix)
 {
-    if (dwVersionMajor < 15 || (dwVersionMajor == 15 && dwVersionMinor < 5))
+    if (dwVersionMajor != 0 && (dwVersionMajor < 15 || (dwVersionMajor == 15 && dwVersionMinor < 5)))
     {
         return new RPCTableManager<RPCHandlerRecord_Legacy>(hThisDLL);
     }

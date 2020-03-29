@@ -481,8 +481,8 @@ unsigned GetVMPipeNameW(unsigned PID, wchar_t *pName, size_t MaxNameLength, bool
                 BazisLib::String::sFormat(_T("One of the virtual machines has an old version of KDCLIENT.DLL/VBOXDD.DLL loaded (%u.%u expected, %u.%u found). Please install the latest file versions, as described on VirtualKD-Redux website, and restart your virtual machines."),
                 (newVersion >> 16) & 0xFFFF,
                     newVersion & 0xFFFF,
-                    oldVersion & 0xFFFF,
-                    (oldVersion >> 16) & 0xFFFF).c_str(),
+                    (oldVersion >> 16) & 0xFFFF,
+                    oldVersion & 0xFFFF).c_str(),
                 _T("VirtualKD-Redux"),
                 MB_ICONWARNING | MB_TASKMODAL);
         }
