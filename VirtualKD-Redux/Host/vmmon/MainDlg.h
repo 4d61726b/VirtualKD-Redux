@@ -11,8 +11,8 @@
 #include <BazisLib/bzscore/file.h>
 
 DECLARE_SERIALIZEABLE_STRUC10_I(MonitorParams,
-bool, ToolsNotInstalled, false,
 BazisLib::String, ToolsPath, _T(""),
+BazisLib::String, PreviewPath, _T(""),
 bool, AutoInvokeDebugger, true,
 bool, AutoCloseDebugger, false,
 unsigned, DebuggerType, 1,
@@ -37,6 +37,7 @@ private:
 
     MonitorParams m_Params;
     BazisLib::String m_DbgToolsPath;
+    BazisLib::String m_DbgPreviewPath;
 
     CComboBox m_DebugLevel;
     PVOID m_pCallServerContext;
@@ -80,7 +81,8 @@ public:
 
     NOTIFY_HANDLER(IDC_LIST1, LVN_ITEMCHANGED, OnSelChanged)
         COMMAND_HANDLER(IDC_DBGLEVEL, CBN_SELCHANGE, OnDebugLevelChanged)
-    END_MSG_MAP()
+		COMMAND_HANDLER(IDC_DBGPATH2, BN_CLICKED, OnBnClickedDbgpath2)
+	END_MSG_MAP()
 
     BEGIN_DLGRESIZE_MAP(CMainDlg)
         DLGRESIZE_CONTROL(IDC_LIST1, DLSZ_SIZE_X | DLSZ_SIZE_Y)
@@ -155,4 +157,5 @@ public:
     LRESULT OnBnClickedTraceassist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnBnClickedRevertsnapshot(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnBnClickedInstantbreak(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedDbgpath2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };
