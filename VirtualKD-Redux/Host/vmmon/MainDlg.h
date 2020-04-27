@@ -15,7 +15,7 @@ BazisLib::String, ToolsPath, _T(""),
 BazisLib::String, PreviewPath, _T(""),
 bool, AutoInvokeDebugger, true,
 bool, AutoCloseDebugger, false,
-unsigned, DebuggerType, 1,
+unsigned, DebuggerType, 2,
 bool, WaitForOS, true,
 bool, InitialBreakIn, true,
 unsigned, DebugLevel, 1,
@@ -62,7 +62,8 @@ public:
         COMMAND_HANDLER(IDC_CLEARLOG, BN_CLICKED, OnBnClickedClearlog)
         COMMAND_HANDLER(IDC_CLEANUPVMS, BN_CLICKED, OnBnClickedClearVMs)
         COMMAND_HANDLER(IDC_UNPATCH, BN_CLICKED, OnBnClickedUnpatch)
-        COMMAND_HANDLER(IDC_DBGPATH, BN_CLICKED, OnBnClickedDbgpath)
+        COMMAND_HANDLER(IDC_DBGPATH, BN_CLICKED, OnBnClickedDbgPath)
+        COMMAND_HANDLER(IDC_WINDBGPREVIEWPATH, BN_CLICKED, OnBnClickedWindbgPreviewPath)
         COMMAND_HANDLER(IDC_TRACEASSIST, BN_CLICKED, OnBnClickedTraceassist)
         COMMAND_HANDLER(IDC_REVERTSNAPSHOT, BN_CLICKED, OnBnClickedRevertsnapshot)
         COMMAND_HANDLER(IDC_INSTANTBREAK, BN_CLICKED, OnBnClickedInstantbreak)
@@ -81,8 +82,7 @@ public:
 
     NOTIFY_HANDLER(IDC_LIST1, LVN_ITEMCHANGED, OnSelChanged)
         COMMAND_HANDLER(IDC_DBGLEVEL, CBN_SELCHANGE, OnDebugLevelChanged)
-		COMMAND_HANDLER(IDC_DBGPATH2, BN_CLICKED, OnBnClickedDbgpath2)
-	END_MSG_MAP()
+    END_MSG_MAP()
 
     BEGIN_DLGRESIZE_MAP(CMainDlg)
         DLGRESIZE_CONTROL(IDC_LIST1, DLSZ_SIZE_X | DLSZ_SIZE_Y)
@@ -153,9 +153,9 @@ public:
     LRESULT OnBnClickedClearlog(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnBnClickedClearVMs(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnBnClickedUnpatch(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-    LRESULT OnBnClickedDbgpath(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+    LRESULT OnBnClickedDbgPath(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnBnClickedTraceassist(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnBnClickedRevertsnapshot(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnBnClickedInstantbreak(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
-	LRESULT OnBnClickedDbgpath2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+    LRESULT OnBnClickedWindbgPreviewPath(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 };
