@@ -1162,6 +1162,17 @@ LRESULT CMainDlg::OnBnClickedWindbgPreviewPath(WORD /*wNotifyCode*/, WORD /*wID*
 {
     const TCHAR* pFileName = NULL;
     String fileName;
+
+    if (m_DbgPreviewPath.empty() && IsWindbgPreviewInstalled())
+    {
+        if (MessageBoxW(L"WinDbg Preview is already installed from the Microsoft Store. Do not continue unless you have a different version to use. Continue?",
+            L"Warning",
+            MB_YESNO | MB_ICONWARNING | MB_DEFBUTTON2) == IDNO)
+        {
+            return 0;
+        }
+    }
+
     if (!m_DbgPreviewPath.empty())
     {
         fileName = Path::Combine(m_DbgPreviewPath, _T("DbgX.Shell.exe"));
