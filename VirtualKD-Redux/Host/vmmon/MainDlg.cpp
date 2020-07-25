@@ -218,6 +218,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
             m_Params.DebuggerType = DEBUGGER_TYPE_CUSTOM;
             SendDlgItemMessage(IDC_USEKD, BM_SETCHECK, BST_UNCHECKED);
             SendDlgItemMessage(IDC_USEWINDBG, BM_SETCHECK, BST_UNCHECKED);
+            SendDlgItemMessage(IDC_USEWINDBGPREVIEW, BM_SETCHECK, BST_UNCHECKED);
             SendDlgItemMessage(IDC_USECUSTOM, BM_SETCHECK, BST_CHECKED);
         }
     }
@@ -230,6 +231,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
             m_Params.DebuggerType = DEBUGGER_TYPE_CUSTOM;
             SendDlgItemMessage(IDC_USEKD, BM_SETCHECK, BST_UNCHECKED);
             SendDlgItemMessage(IDC_USEWINDBG, BM_SETCHECK, BST_UNCHECKED);
+            SendDlgItemMessage(IDC_USEWINDBGPREVIEW, BM_SETCHECK, BST_UNCHECKED);
             SendDlgItemMessage(IDC_USECUSTOM, BM_SETCHECK, BST_CHECKED);
         }
     }
@@ -291,7 +293,7 @@ void CMainDlg::UpdateParamControls()
     GetDlgItem(IDC_DBGTEMPLATE).EnableWindow((m_Params.DebuggerType == DEBUGGER_TYPE_CUSTOM));
 }
 
-void CMainDlg::DebuggerTypeUnCheckHelper()
+void CMainDlg::DebuggerTypeUnCheckHelper(bool bCheckDebuggerType)
 {
     std::vector<std::pair<int, int>> vec{ {0, IDC_USEKD}, {1, IDC_USEWINDBG}, {2, IDC_USECUSTOM}, {3, IDC_USEWINDBGPREVIEW} };
 
@@ -303,10 +305,15 @@ void CMainDlg::DebuggerTypeUnCheckHelper()
             SendDlgItemMessage(e.second, BM_SETCHECK, BST_UNCHECKED);
             GetDlgItem(e.second).EnableWindow(bPreviouslyEnabledState);
         }
+        else if (bCheckDebuggerType)
+        {
+            SendDlgItemMessage(e.second, BM_SETCHECK, BST_CHECKED);
+        }
     }
+
 }
 
-LRESULT CMainDlg::OnParamsChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CMainDlg::OnParamsChanged()
 {
     m_Params.AutoInvokeDebugger = ((SendDlgItemMessage(IDC_STARTDBG, BM_GETCHECK) & BST_CHECKED) != 0);
     m_Params.AutoCloseDebugger = ((SendDlgItemMessage(IDC_STOPDBG, BM_GETCHECK) & BST_CHECKED) != 0);
@@ -355,6 +362,11 @@ LRESULT CMainDlg::OnParamsChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl
     UpdateParamControls();
     SaveParamsToRegistry();
     return 0;
+}
+
+LRESULT CMainDlg::OnParamsChanged(WORD /*wNotifyCode*/, WORD /* wID */, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+    return OnParamsChanged();
 }
 
 void CMainDlg::SaveParamsToRegistry()
@@ -1147,13 +1159,13 @@ LRESULT CMainDlg::OnBnClickedDbgPath(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
     {
         String dbgPath = dlg.m_szFileName;
         dbgPath = Path::GetDirectoryName(dbgPath);
-        if (File::Exists(Path::Combine(dbgPath, _T("windbg.exe"))))
-        {
-            m_DbgToolsPath = dbgPath;
-            m_Params.ToolsPath = m_DbgToolsPath;
-            SaveParamsToRegistry();
-        }
+        m_DbgToolsPath = dbgPath;
+        m_Params.ToolsPath = m_DbgToolsPath;
+        m_Params.DebuggerType = Path::GetFileName(String(dlg.m_szFileName)).compare(L"kd.exe") ? DEBUGGER_TYPE_WINDBG : DEBUGGER_TYPE_KD;
+        SaveParamsToRegistry();
         OnDebuggerPathChanged();
+        DebuggerTypeUnCheckHelper(true);
+        OnParamsChanged();
     }
     return 0;
 }
@@ -1183,13 +1195,13 @@ LRESULT CMainDlg::OnBnClickedWindbgPreviewPath(WORD /*wNotifyCode*/, WORD /*wID*
     {
         String dbgPath = dlg.m_szFileName;
         dbgPath = Path::GetDirectoryName(dbgPath);
-        if (File::Exists(Path::Combine(dbgPath, _T("DbgX.Shell.exe"))))
-        {
-            m_DbgPreviewPath = dbgPath;
-            m_Params.PreviewPath = m_DbgPreviewPath;
-            SaveParamsToRegistry();
-        }
+        m_DbgPreviewPath = dbgPath;
+        m_Params.PreviewPath = m_DbgPreviewPath;
+        m_Params.DebuggerType = DEBUGGER_TYPE_WINDBGPREVIEW;
+        SaveParamsToRegistry();
         OnDebuggerPathChanged();
+        DebuggerTypeUnCheckHelper(true);
+        OnParamsChanged();
     }
     return 0;
 }

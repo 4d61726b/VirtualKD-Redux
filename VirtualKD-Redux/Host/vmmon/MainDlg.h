@@ -49,7 +49,7 @@ private:
     PVOID m_pCallServerContext;
     bool m_bValidVMsWereFound;	//First time when a valid VMs are found, the first one is selected in the dialog
 
-    void DebuggerTypeUnCheckHelper();
+    void DebuggerTypeUnCheckHelper(bool bCheckDebuggerType = false);
 
 public:
     enum { IDD = IDD_MAINDLG };
@@ -132,6 +132,7 @@ public:
     LRESULT OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnParamsChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+    LRESULT OnParamsChanged();
     LRESULT OnLogPacketsChanged(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnRunDebugger(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
     LRESULT OnSelChanged(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/);
