@@ -1,13 +1,13 @@
 #pragma once
 
-#define VIRTUALKD_REDUX_VERSION         2020,2
-#define VIRTUALKD_REDUX_VERSION_STR     "2020.2"
+#define VIRTUALKD_REDUX_VERSION         2020,3
+#define VIRTUALKD_REDUX_VERSION_STR     "2020.3"
 #define COPYRIGHT_STR                   "LGPL"
 #define TRADEMARKS_STR                  "VirtualKD-Redux"
 #define PRODUCTNAME_STR                 "VirtualKD-Redux"
 #define COMPANY_STR                     "VirtualKD-Redux"
 #define COMMENTS_STR                    "https://github.com/4d61726b/VirtualKD-Redux"
-#define VIRTUALKD_VER_INT               0x07e40002
+#define VIRTUALKD_VER_INT               0x07e40003
 
 #define KDCLIENT_DLL_VER_STR            VIRTUALKD_REDUX_VERSION_STR
 #define KDCLIENT_DLL_VER                VIRTUALKD_REDUX_VERSION
