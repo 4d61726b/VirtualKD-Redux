@@ -3,7 +3,7 @@
 
 ## Features
 
-* Support for the latest VMware Workstation (15.5.6) as well as the latest [VMware Workstation Tech Preview (20H2) build](https://blogs.vmware.com/workstation/2020/07/workstation-tp-adds-container-support.html)
+* Support for the latest VMware Workstation Pro (16.x)
 * Support starting with Windows XP up to the latest Windows 10 (Currently 2004)
 * Support for the latest [WinDbg Preview](https://www.microsoft.com/en-us/p/windbg-preview/9pgjgd53tn86)
 * Toolchain modernization. Builds with Visual Studio 2017
