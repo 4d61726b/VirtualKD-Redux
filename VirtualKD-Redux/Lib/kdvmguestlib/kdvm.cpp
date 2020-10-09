@@ -383,23 +383,27 @@ extern "C" NTSYSAPI PIMAGE_NT_HEADERS NTAPI RtlImageNtHeader(IN PVOID ModuleAddr
 
 NTSTATUS __stdcall KdDebuggerInitialize0(PVOID lpLoaderParameterBlock)
 {
-    char *pBase = (char *)(((ULONG_PTR)(void *)KdDebuggerInitialize0 / PAGE_SIZE) * PAGE_SIZE);
-    for (int i = 0; i < 1024 * 1024 / PAGE_SIZE; i++)
-    {
-        PIMAGE_NT_HEADERS pHeaders = RtlImageNtHeader(pBase - PAGE_SIZE * i);
-        if (pHeaders)
-        {
-            //Prevent the current module from being relocated to a different address and breaking the physical/virtual address mapping
-            //for the KD buffer.
-            pHeaders->FileHeader.Characteristics |= IMAGE_FILE_RELOCS_STRIPPED;
-            break;
-        }
-    }
-
     s_bVBoxDetected = false;
     NTSTATUS st = ChannelHelper<VMWareChannel>::KdDebuggerInitialize0(lpLoaderParameterBlock);
     if ((st == STATUS_RETRY) && s_bVBoxDetected)
         st = ChannelHelper<VBoxChannel>::KdDebuggerInitialize0(lpLoaderParameterBlock);
+
+    if (s_bVBoxDetected)
+    {
+        char *pBase = (char *)(((ULONG_PTR)(void *)KdDebuggerInitialize0 / PAGE_SIZE) * PAGE_SIZE);
+        for (int i = 0; i < 1024 * 1024 / PAGE_SIZE; i++)
+        {
+            PIMAGE_NT_HEADERS pHeaders = RtlImageNtHeader(pBase - PAGE_SIZE * i);
+            if (pHeaders)
+            {
+                //Prevent the current module from being relocated to a different address and breaking the physical/virtual address mapping
+                //for the KD buffer.
+                pHeaders->FileHeader.Characteristics |= IMAGE_FILE_RELOCS_STRIPPED;
+                break;
+            }
+        }
+    }
+
     return st;
 }
 
