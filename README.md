@@ -3,8 +3,8 @@
 
 ## Features
 
-* Support for the latest VMware Workstation Pro (16.x)
-* Support starting with Windows XP up to the latest Windows 10 (Currently 2004)
+* Support for the latest VMware Workstation Pro
+* Support starting with Windows XP up to the latest Windows 10
 * Support for the latest [WinDbg Preview](https://www.microsoft.com/en-us/p/windbg-preview/9pgjgd53tn86)
 * Toolchain modernization. Builds with Visual Studio 2017
 * Simplified build system. No additional libraries required
