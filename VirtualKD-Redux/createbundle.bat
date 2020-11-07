@@ -16,4 +16,4 @@ copy Build\Win32\Release\kdbazis.dll Bundle\target32
 copy Build\x64\Release\kdbazis.dll Bundle\target64
 REM copy Build\Win32\Release\kdpatch.sys Bundle\target32
 REM copy Build\x64\Release\kdpatch.sys Bundle\target64
-
+copy Certs\VKD-Redux_CA.cer Bundle\
