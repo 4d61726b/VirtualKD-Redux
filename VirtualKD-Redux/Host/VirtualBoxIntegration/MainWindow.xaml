@@ -8,8 +8,8 @@
         <Label Content="Virtual machines:" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top"/>
         <TextBlock Margin="10,283,274,10">
 
-<Hyperlink     NavigateUri="http://virtualkd.sysprogs.org/tutorials/install/" RequestNavigate="Hyperlink_RequestNavigate" >
-    Open VirtualKD quick start tutorial
+<Hyperlink     NavigateUri="https://git.io/JelPr" RequestNavigate="Hyperlink_RequestNavigate" >
+    Open VirtualKD-Redux quick start tutorial
   </Hyperlink>
 </TextBlock>
         <Button Content="Refresh" Margin="0,0,10,10" Click="Button_Click" Height="22" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
