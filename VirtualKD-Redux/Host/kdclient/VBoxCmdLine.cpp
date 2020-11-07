@@ -26,6 +26,9 @@ unsigned VBoxCmdLineToVMNameW(const RemoteProcessInfo &info, wchar_t *pNameBuffe
     if (info.CommandLine.empty() || !pNameBuffer || !MaxLength)
         return 0;
 
+    if (info.CommandLine.find(L"-suplib-3rdchild ") == info.CommandLine.npos)
+        return 0;
+
     size_t idx = info.CommandLine.find(L"--comment");
     if (idx != info.CommandLine.npos)
     {

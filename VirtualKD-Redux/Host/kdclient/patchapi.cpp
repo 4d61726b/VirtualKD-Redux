@@ -75,7 +75,7 @@ HANDLE CreateVMSessionList()
     assert(!_tcsstr(entry.szExeFile, _T("vmware-vmx.exe")));
     assert(!_tcsstr(entry.szExeFile, _T("vmware-vmx-debug.exe")));
     assert(!_tcsstr(entry.szExeFile, _T("vmware-vmx-stats.exe")));
-    assert(!_tcsstr(entry.szExeFile, _T("VirtualBox.exe")));
+    assert(!_tcsstr(entry.szExeFile, _T("VirtualBoxVM.exe")));
     return hSnap;
 }
 
@@ -91,7 +91,7 @@ unsigned GetNextVMSessionPID(HANDLE hList)
 
 unsigned GetNextVMSessionPIDEx(HANDLE hList, VMType *pVMType)
 {
-    TCHAR *tszNames[] = { _T("VirtualBox.exe"), _T("vmware-vmx.exe"), _T("vmware-vmx-debug.exe"), _T("vmware-vmx-stats.exe") };
+    TCHAR *tszNames[] = { _T("VirtualBoxVM.exe"), _T("vmware-vmx.exe"), _T("vmware-vmx-debug.exe"), _T("vmware-vmx-stats.exe") };
     unsigned PID = 0;
     unsigned idxMatch = 0;
     for (;;)
@@ -227,7 +227,7 @@ unsigned SessionNameFromVMCmdLineW(const RemoteProcessInfo &info, wchar_t *pName
 
     if (wcsstr(exeName.c_str(), L"vmware-vmx.exe") || wcsstr(exeName.c_str(), L"vmware-vmx-debug.exe") || wcsstr(exeName.c_str(), L"vmware-vmx-stats.exe"))
         return SessionNameFromVMWareCmdLineW(info.CommandLine.c_str(), pName, MaxNameLength);
-    else if ((wcsstr(exeName.c_str(), L"VirtualBox.exe") || wcsstr(info.EXEName.c_str(), L"VirtualBox.exe")))
+    else if ((wcsstr(exeName.c_str(), L"VirtualBoxVM.exe") || wcsstr(info.EXEName.c_str(), L"VirtualBoxVM.exe")))
         return VBoxCmdLineToVMNameW(info, pName, MaxNameLength);
     else
         return 0;
@@ -277,7 +277,7 @@ HANDLE StartPatcherThread(unsigned PID, DWORD *pPatcherThreadID = NULL)
 #ifdef _WIN64
         if (GetRemoteModuleHandle64Aware(PID, _T("kdclient64.dll")))
 #else
-        if (GetRemoteModuleHandle64Aware(PID, _T("kdclient.dll")))
+        if (GetRemoteModuleHandle64Aware(PID, _T("kdclient32.dll")))
 #endif
             return 0;
 

@@ -90,7 +90,7 @@ public:
     //! Starts DLL unloading and returns a handle to the created remote thread
     HANDLE InitiateDLLUnloading(unsigned PID, bool UseShortName = true, DWORD *pThreadID = NULL)
     {
-        ULONGLONG p = GetRemoteProcAddress(PID, L"kdclient.dll", "VMWareUnhookThread");
+        ULONGLONG p = GetRemoteProcAddress(PID, L"kdclient32.dll", "VMWareUnhookThread");
         if (!p)
             p = GetRemoteProcAddress(PID, L"kdclient64.dll", "VMWareUnhookThread");
         if (!p)
