@@ -18,28 +18,28 @@
 using namespace BazisLib;
 using namespace BootEditor;
 
+static WORD GetOSVersion()
+{
+    typedef void (WINAPI* RtlGetVersion)(OSVERSIONINFOEXW*);
+    OSVERSIONINFOEXW info = { 0 };
+    info.dwOSVersionInfoSize = sizeof(info);
+    ((RtlGetVersion)GetProcAddress(GetModuleHandleW(L"ntdll"), "RtlGetVersion"))(&info);
+    return (WORD)((info.dwMajorVersion << 8) | info.dwMinorVersion);
+}
+
 bool IsVistaOrLater()
 {
-    OSVERSIONINFO info = { sizeof(info) };
-    GetVersionEx(&info);
-    int ver = (info.dwMajorVersion << 8) | info.dwMinorVersion;
-    return (ver >= 0x0600);
+    return GetOSVersion() >= 0x0600;
 }
 
 bool IsWin8OrLater()
 {
-    OSVERSIONINFO info = { sizeof(info) };
-    GetVersionEx(&info);
-    int ver = (info.dwMajorVersion << 8) | info.dwMinorVersion;
-    return (ver >= 0x0602);
+    return GetOSVersion() >= 0x0602;
 }
 
-static bool IsWin10()
+bool IsWin10OrLater()
 {
-    String strProductName;
-    RegistryKey key2(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
-    strProductName = (String)key2[L"ProductName"];
-    return (strProductName.ifind(L"windows 10 ") == 0 || strProductName.icompare(L"windows 10") == 0);
+    return GetOSVersion() >= 0x0a00;
 }
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
@@ -86,7 +86,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
     SetDlgItemText(IDC_REUSEENTRY, String::sFormat(_T("Use existing entry \"%s\""), m_ExistingEntryName.c_str()).c_str());
     SendDlgItemMessage(IDC_SETDEFAULT, BM_SETCHECK, BST_CHECKED);
 
-    if (IsWin10())
+    if (IsWin10OrLater())
     {
         SendDlgItemMessage(IDC_KDCOM, BM_SETCHECK, BST_CHECKED);
     }
