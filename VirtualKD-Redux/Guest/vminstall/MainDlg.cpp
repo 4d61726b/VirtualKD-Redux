@@ -57,8 +57,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
     bHandled = FALSE;
 
-    DlgResize_Init();
-
     ManagedPointer<AIBootConfigurationEntry> pEntry;
     bool bAlreadyInstalled = false;
 
