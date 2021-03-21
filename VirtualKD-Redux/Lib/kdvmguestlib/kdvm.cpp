@@ -155,7 +155,7 @@ public:
         }
         channel.PrepareSend(5 + sizeof(g_szRPCCommandHeader) - 1);
         char commandType = VersionReport;
-        int version = KDRPC_PROTOCOL_VERSION;
+        unsigned int version = VIRTUALKD_REDUX_VER_INT;
         if (!channel.SendPartial(&g_szRPCCommandHeader, sizeof(g_szRPCCommandHeader) - 1))
             return STATUS_CONNECTION_REFUSED;
         if (!channel.SendPartial(&commandType, 1))
@@ -173,8 +173,13 @@ public:
         if (memcmp(pfx, g_szRPCReplySignature, sizeof(g_szRPCReplySignature) - 1))
             return STATUS_CONNECTION_REFUSED;
         channel.Receive(&version, 4);
-        if (version != KDRPC_PROTOCOL_VERSION)
+#ifdef VKD_EXPERIMENTAL_PACKET_POLL_DIVIDER_SUPPORT
+        if (version != VIRTUALKD_REDUX_VER_INT)
             return STATUS_PROTOCOL_NOT_SUPPORTED;
+#else
+        if (version < VIRTUALKD_REDUX_VER_INT)
+            return STATUS_PROTOCOL_NOT_SUPPORTED;
+#endif
         return STATUS_SUCCESS;
     }
 

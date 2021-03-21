@@ -14,6 +14,7 @@
 #include <BazisLib/bzscore/autofile.h>
 #include "rpcdispatch/reporter.h"
 #include <BazisLib/bzshlp/win32/RegistrySerializer.h>
+#include <vkdversion.h>
 
 using namespace BazisLib;
 
@@ -473,8 +474,8 @@ RPCTableManager<Record_T>::RPCTableManager(HINSTANCE hThisDLL)
     : m_Database(CreateAndGetDatabaseDirectory())
     , m_pPatchedEntry(NULL)
 {
-    const TCHAR tszRegistryPath[] = _T("SOFTWARE\\BazisSoft\\KDVMWare\\Patcher");
-    RegistryKey key(HKEY_LOCAL_MACHINE, tszRegistryPath);
+    const WCHAR wszRegistryPath[] = VKD_REGISTRY_CONFIG_PATH L"\\Patcher";
+    RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
     BazisLib::Win32::RegistrySerializer::Deserialize(key, m_Params);
     BazisLib::Win32::RegistrySerializer::Serialize(key, m_Params);
 }

@@ -32,11 +32,9 @@ enum RpcCommand
     VersionReport = 'v',
 };
 
-//! Specifies present protocol version
 #ifdef VKD_EXPERIMENTAL_PACKET_POLL_DIVIDER_SUPPORT
-enum { KDRPC_PROTOCOL_VERSION = 0x250 };
-#else
-enum { KDRPC_PROTOCOL_VERSION = VIRTUALKD_VER_INT };
+#undef VIRTUALKD_REDUX_VER_INT
+#define VIRTUALKD_REDUX_VER_INT         0x250
 #endif
 
 enum KDRPCGlobalFlags

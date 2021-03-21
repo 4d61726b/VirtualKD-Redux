@@ -30,7 +30,7 @@ enum
 
 using namespace BazisLib;
 
-static const TCHAR tszRegistryPath[] = _T("SOFTWARE\\BazisSoft\\KdVMWare\\Monitor");
+static const WCHAR wszRegistryPath[] = VKD_REGISTRY_CONFIG_PATH L"\\Monitor";
 
 static BOOL IsWindbgPreviewInstalled();
 
@@ -89,7 +89,7 @@ CMainDlg::CMainDlg()
     GetSystemInfo(&sysinfo);
     m_ProcessorCount = sysinfo.dwNumberOfProcessors;
 
-    RegistryKey key(HKEY_LOCAL_MACHINE, tszRegistryPath);
+    RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
     Win32::RegistrySerializer::Deserialize(key, m_Params);
 
     String toolsPath(_T(""));
@@ -371,7 +371,7 @@ LRESULT CMainDlg::OnParamsChanged(WORD /*wNotifyCode*/, WORD /* wID */, HWND /*h
 
 void CMainDlg::SaveParamsToRegistry()
 {
-    RegistryKey key(HKEY_LOCAL_MACHINE, tszRegistryPath);
+    RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
     BazisLib::Win32::RegistrySerializer::Serialize(key, m_Params);
 }
 

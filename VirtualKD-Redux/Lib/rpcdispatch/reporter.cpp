@@ -33,7 +33,7 @@ StatusReporter::StatusReporter()
     if (!exists)
         memset(m_pStatus, 0, sizeof(KdClientStatus));
 
-    m_pStatus->HostSideDLLVersion = VIRTUALKD_VER_INT;
+    m_pStatus->HostSideDLLVersion = VIRTUALKD_REDUX_VER_INT;
 
     _sntprintf_s(tszMappingName, __countof(tszMappingName), _TRUNCATE, tszLogPipeNameFormat, GetCurrentProcessId());
     m_hLogPipe = CreateFile(tszMappingName, GENERIC_WRITE, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);

@@ -452,9 +452,9 @@ unsigned GetVMPipeNameW(unsigned PID, wchar_t *pName, size_t MaxNameLength, bool
     unsigned len = (unsigned)wcslen(pStatus->PipeName);
     wcsncpy_s(pName, MaxNameLength, pStatus->PipeName, _TRUNCATE);
 
-    if ((bOldVersion || (pStatus->HostSideDLLVersion != VIRTUALKD_VER_INT)) && !s_bUserWarnedAboutVersion)
+    if ((bOldVersion || (pStatus->HostSideDLLVersion != VIRTUALKD_REDUX_VER_INT)) && !s_bUserWarnedAboutVersion)
     {
-        unsigned oldVersion = 0, newVersion = VIRTUALKD_VER_INT;
+        unsigned oldVersion = 0, newVersion = VIRTUALKD_REDUX_VER_INT;
         if (pStatus)
             oldVersion = pStatus->HostSideDLLVersion;
 

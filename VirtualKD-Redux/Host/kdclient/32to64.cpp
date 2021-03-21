@@ -343,7 +343,7 @@ ULONGLONG KdClient32To64Dispatch(KDClientCommand cmd, unsigned PID, LPWSTR lpStr
     case kUnpatchAndWait:
         return UnpatchVMSessionIfNeeded(PID);
     case kQueryVersion:
-        return VIRTUALKD_VER_INT;
+        return VIRTUALKD_REDUX_VER_INT;
     default:
         return -1LL;
     }

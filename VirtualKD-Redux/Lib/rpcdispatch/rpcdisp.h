@@ -8,6 +8,7 @@
 #include "kdvmguestlib/kdrpc.h"
 #include "kdvmguestlib/kdxxx.h"
 #include <BazisLib/bzscore/assert.h>
+#include <BazisLib/bzshlp/Win32/RegistrySerializer.h>
 
 //! Contains declarations for KdSendPacket()/KdReceivePacket() versions called on host side.
 /*!
@@ -64,6 +65,25 @@ private:
         offset += Size;
     }
 
+    DECLARE_SERIALIZEABLE_STRUC1_I(KdClientParams,
+    unsigned, VersionOverride, 0);
+
+    static DWORD GetVirtualKDReduxVersion()
+    {
+        const WCHAR wszRegistryPath[] = VKD_REGISTRY_CONFIG_PATH;
+        BazisLib::Win32::RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
+        KdClientParams params;
+        BazisLib::Win32::RegistrySerializer::Deserialize(key, params);
+        BazisLib::Win32::RegistrySerializer::Serialize(key, params);
+
+        if (params.VersionOverride != 0)
+        {
+            return params.VersionOverride;
+        }
+
+        return VIRTUALKD_REDUX_VER_INT;
+    }
+
 public:
     char szTestReply[KDRPC_TEST_BUFFER_SIZE + sizeof(g_szRPCReplySignature)];
 
@@ -87,20 +107,27 @@ public:
         switch (pRequest[0])
         {
         case VersionReport:
+        {
+            unsigned int uiGuestVersion = *((int *)(pRequest + 1));
+            unsigned int uiHostVersion = GetVirtualKDReduxVersion();
             *ppReply = m_pReplyBuffer;
-            if (*((int *)(pRequest + 1)) == KDRPC_PROTOCOL_VERSION)
+            if (uiGuestVersion == uiHostVersion || uiGuestVersion >= KDVM_DLL_MIN_VER_INT)
+            {
                 m_bProtocolVersionMatch = true;
+            }
             else
             {
-                m_pDispatcher->ReportProtocolVersionError(*((int *)(pRequest + 1)), KDRPC_PROTOCOL_VERSION);
+                m_pDispatcher->ReportProtocolVersionError(*((int *)(pRequest + 1)), uiHostVersion);
             }
             memcpy(m_pReplyBuffer, g_szRPCReplySignature, sizeof(g_szRPCReplySignature) - 1);
-            *((int *)(m_pReplyBuffer + sizeof(g_szRPCReplySignature) - 1)) = KDRPC_PROTOCOL_VERSION;
+            *((int *)(m_pReplyBuffer + sizeof(g_szRPCReplySignature) - 1)) = uiHostVersion;
             return sizeof(int) + sizeof(g_szRPCReplySignature) - 1;
+        }
         case TestConnection:
             if (!m_bProtocolVersionMatch)
             {
-                m_pDispatcher->ReportProtocolVersionError(0x100, KDRPC_PROTOCOL_VERSION);
+                unsigned int uiHostVersion = GetVirtualKDReduxVersion();
+                m_pDispatcher->ReportProtocolVersionError(0x100, uiHostVersion);
                 *ppReply = szTestReply;
                 return 0;
             }

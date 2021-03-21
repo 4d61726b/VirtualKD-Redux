@@ -41,7 +41,7 @@ public:
 
     LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
     {
-        BazisLib::RegistryKey key(HKEY_LOCAL_MACHINE, tszTraceAssistRegPath);
+        BazisLib::RegistryKey key(HKEY_CURRENT_USER, wszTraceAssistRegPath);
         BazisLib::Win32::RegistrySerializer::Deserialize(key, m_Params);
         SendDlgItemMessage(IDC_ENABLETRACE, BM_SETCHECK, m_Params.TraceAssistEnabled ? BST_CHECKED : 0);
         SetDlgItemText(IDC_LOGDIR, m_Params.LogFileDirectory.c_str());
@@ -59,7 +59,7 @@ public:
         GetDlgItemText(IDC_TRACEPREFIX, tsz, __countof(tsz));
         m_Params.MessagePrefix = tsz;
         m_Params.OverwriteFileOnStart = ((SendDlgItemMessage(IDC_REPLACELOG, BM_GETCHECK) & BST_CHECKED) != 0);
-        BazisLib::RegistryKey key(HKEY_LOCAL_MACHINE, tszTraceAssistRegPath);
+        BazisLib::RegistryKey key(HKEY_CURRENT_USER, wszTraceAssistRegPath);
         BazisLib::Win32::RegistrySerializer::Serialize(key, m_Params);
         EndDialog(IDOK);
         return 0;

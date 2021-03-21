@@ -196,7 +196,7 @@
     <ProjectReference Include="..\..\Lib\BazisLib\bzshlp\bzshlp-user.vcxproj">
       <Project>{0ead365b-30f9-4c98-a47c-14e8a77abcf7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Lib\rpcdispatch\rpcdispatch.vcxproj">
+    <ProjectReference Include="..\..\Lib\rpcdispatch\rpcdispatch-user.vcxproj">
       <Project>{07a82aea-e8a5-4656-8f9d-17b0910b6aa1}</Project>
     </ProjectReference>
   </ItemGroup>
