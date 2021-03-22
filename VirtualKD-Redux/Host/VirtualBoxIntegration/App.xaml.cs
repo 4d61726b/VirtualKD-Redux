@@ -68,7 +68,7 @@ namespace VirtualBoxIntegration
         {
             if (!IsSystemOwned(Path.Combine(myDir, "kdclient64.dll")) || !IsSystemOwned(Path.Combine(myDir, "kdclient32.dll")))
             {
-                if (MessageBox.Show("VirtualBox won't load KDCLIENT32.DLL/KDCLIENT64.DLL unless it is owned by the System acoount. Do you want to fix it now?", "VirtualBoxIntegration", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show("VirtualBox won't load KDCLIENT32.DLL/KDCLIENT64.DLL unless it is owned by the System account. Do you want to fix it now?", "VirtualBoxIntegration", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     ChownToSystem(Path.Combine(myDir, "kdclient64.dll"));
                     ChownToSystem(Path.Combine(myDir, "kdclient32.dll"));

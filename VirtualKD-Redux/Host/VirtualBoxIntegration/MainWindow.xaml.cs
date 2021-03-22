@@ -169,7 +169,16 @@ namespace VirtualBoxIntegration
 
         private void Refresh()
         {
-            Machines = _VirtualBox.Machines.Cast<VirtualBox.IMachine>().Select(m => new MachineWrapper(this, m)).ToList();
+            Machines = new List<MachineWrapper>();
+
+            foreach (var machine in _VirtualBox.Machines.Cast<VirtualBox.IMachine>())
+            {
+                if (machine.Accessible != 0)
+                {
+                    Machines.Add(new MachineWrapper(this, machine));
+                }
+            }
+
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs("Machines"));
         }
