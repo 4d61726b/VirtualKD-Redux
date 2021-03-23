@@ -960,6 +960,7 @@ void CMainDlg::RunDebugger(unsigned entryIndex)
             exInfo.lpVerb = L"open";
             exInfo.lpFile = L"WindbgX.exe";
             exInfo.lpParameters = tszCmdLine;
+            exInfo.nShow = SW_SHOWMAXIMIZED;
             if (ShellExecuteExW(&exInfo) == TRUE)
             {
                 proc.idDebuggerProcess = GetProcessId(exInfo.hProcess);
