@@ -9,12 +9,37 @@
 #include "install.h"
 
 #include <BazisLib/bzshlp/Win32/wow64.h>
+#include <BazisLib/bzscore/Win32/registry.h>
+
+using namespace BazisLib;
 
 #if BAZISLIB_VERSION < 0x230
 #error Please use BazisLib 2.3.0 or higher
 #endif
 
 CAppModule _Module;
+
+static bool IsSecureBootEnabled()
+{
+    if (!IsWin8OrLater())
+    {
+        return false;
+    }
+
+    RegistryKey key(HKEY_LOCAL_MACHINE, L"SYSTEM\\CurrentControlSet\\Control\\SecureBoot\\State");
+    unsigned int dwUEFISecureBootEnabled = 0;
+    if (!key.Valid())
+    {
+        return false;
+    }
+
+    if (!key[L"UEFISecureBootEnabled"].ReadValue(&dwUEFISecureBootEnabled).Successful())
+    {
+        return false;
+    }
+
+    return !!dwUEFISecureBootEnabled;
+}
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
@@ -25,6 +50,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
         return 1;
     }
 #endif
+
+    if (IsSecureBootEnabled())
+    {
+        MessageBoxW(NULL, L"Secure boot must be disabled before using VirtualKD-Redux.", L"Error", MB_ICONERROR);
+        return 1;
+    }
 
     HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
     ATLASSERT(SUCCEEDED(hRes));
