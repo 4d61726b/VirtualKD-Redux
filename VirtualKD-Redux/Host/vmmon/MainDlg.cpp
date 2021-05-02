@@ -201,10 +201,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
         break;
     case DEBUGGER_TYPE_CUSTOM:
         SendDlgItemMessage(IDC_USECUSTOM, BM_SETCHECK, BST_CHECKED);
+        GetDlgItem(IDC_BREAKIN).EnableWindow(FALSE);
         break;
     case DEBUGGER_TYPE_WINDBGPREVIEW:
         SendDlgItemMessage(IDC_USEWINDBGPREVIEW, BM_SETCHECK, BST_CHECKED);
-        GetDlgItem(IDC_BREAKIN).EnableWindow(FALSE);
         GetDlgItem(IDC_WINDBGPREVIEWPATH).EnableWindow();
         break;
     }
@@ -336,12 +336,11 @@ LRESULT CMainDlg::OnParamsChanged()
     else if ((SendDlgItemMessage(IDC_USECUSTOM, BM_GETCHECK) & BST_CHECKED) != 0)
     {
         m_Params.DebuggerType = DEBUGGER_TYPE_CUSTOM;
+        GetDlgItem(IDC_BREAKIN).EnableWindow(FALSE);
     }
     else if ((SendDlgItemMessage(IDC_USEWINDBGPREVIEW, BM_GETCHECK) & BST_CHECKED) != 0)
     {
         m_Params.DebuggerType = DEBUGGER_TYPE_WINDBGPREVIEW;
-        SendDlgItemMessage(IDC_BREAKIN, BM_SETCHECK, BST_UNCHECKED);
-        GetDlgItem(IDC_BREAKIN).EnableWindow(FALSE);
         GetDlgItem(IDC_WINDBGPREVIEWPATH).EnableWindow();
     }
 
@@ -952,8 +951,8 @@ void CMainDlg::RunDebugger(unsigned entryIndex)
     {     
         if (m_Params.PreviewPath.empty())
         {
-            LPCTSTR lpFormat = _T("-k com:pipe,resets=0,reconnect,port=%s");
-            _sntprintf_s(tszCmdLine, __countof(tszCmdLine), _TRUNCATE, lpFormat, proc.PipeName.c_str());
+            LPCTSTR lpFormat = _T("-k com:pipe,resets=0,reconnect,port=%s%s");
+            _sntprintf_s(tszCmdLine, __countof(tszCmdLine), _TRUNCATE, lpFormat, proc.PipeName.c_str(), m_Params.InitialBreakIn ? _T(" -d") : _T(""));
             SHELLEXECUTEINFOW exInfo = { 0 };
             exInfo.cbSize = sizeof(exInfo);
             exInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
@@ -1138,7 +1137,7 @@ void CMainDlg::OnDebuggerPathChanged()
     bool bWindbgPreview = !m_DbgPreviewPath.empty() || IsWindbgPreviewInstalled();
     GetDlgItem(IDC_STARTDBG).EnableWindow(bDbgToolsPath || bWindbgPreview || m_Params.DebuggerType == DEBUGGER_TYPE_CUSTOM);
     GetDlgItem(IDC_STOPDBG).EnableWindow(bDbgToolsPath || bWindbgPreview || m_Params.DebuggerType == DEBUGGER_TYPE_CUSTOM);
-    GetDlgItem(IDC_BREAKIN).EnableWindow(bDbgToolsPath || bWindbgPreview || m_Params.DebuggerType == DEBUGGER_TYPE_CUSTOM);
+    GetDlgItem(IDC_BREAKIN).EnableWindow((bDbgToolsPath || bWindbgPreview) && m_Params.DebuggerType != DEBUGGER_TYPE_CUSTOM);
     GetDlgItem(IDC_USEKD).EnableWindow(m_Params.DebuggerType == DEBUGGER_TYPE_KD ? TRUE : bDbgToolsPath);
     GetDlgItem(IDC_USEWINDBG).EnableWindow(m_Params.DebuggerType == DEBUGGER_TYPE_WINDBG ? TRUE : bDbgToolsPath);
     GetDlgItem(IDC_USEWINDBGPREVIEW).EnableWindow(m_Params.DebuggerType == DEBUGGER_TYPE_WINDBGPREVIEW ? TRUE : bWindbgPreview);
