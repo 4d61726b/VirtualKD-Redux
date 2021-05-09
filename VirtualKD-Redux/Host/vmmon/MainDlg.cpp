@@ -956,6 +956,7 @@ void CMainDlg::RunDebugger(unsigned entryIndex)
             SHELLEXECUTEINFOW exInfo = { 0 };
             exInfo.cbSize = sizeof(exInfo);
             exInfo.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_FLAG_NO_UI;
+            exInfo.nShow = SW_SHOWNORMAL;
             exInfo.lpVerb = L"open";
             exInfo.lpFile = L"WindbgX.exe";
             exInfo.lpParameters = tszCmdLine;
