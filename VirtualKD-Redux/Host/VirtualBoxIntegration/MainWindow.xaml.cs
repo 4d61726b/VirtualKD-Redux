@@ -30,19 +30,53 @@ namespace VirtualBoxIntegration
 
         public MainWindow()
         {
+            RegistryKey key;
+            string locationerr = "Unable to locate VirtualBox. Please install the latest version of VirtualBox.";
+            string versionerr = "VirtualBox older than 6.0 detected. Please install VirtualBox 6.0 or later to use this version of VirtualKD-Redux.";
+
             InitializeComponent();
 
             this.DataContext = this;
 
-            _VirtualBox = new VirtualBox.VirtualBox();
-            lblVersion.Content = _VirtualBox.Version;
-            if (int.Parse(_VirtualBox.Version.Split('.')[0]) < 5)
+            key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Oracle\VirtualBox");
+            if (key == null)
             {
-                throw new Exception("VirtualBox older than 5.0 detected. Please install VirtualBox 5.0 or later to use this version of VirtualKD.");
+                MessageBox.Show(locationerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
+            try
+            {
+                _VirtualBox = new VirtualBox.VirtualBox();
+            }
+            catch (System.InvalidCastException e)
+            {
+                string version = key.GetValue("Version") as string;
+
+                if (version == null)
+                {
+                    MessageBox.Show(locationerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+
+                if (int.Parse(version.Split('.')[0]) < 6)
+                {
+                    MessageBox.Show(versionerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(1);
+                }
+
+                throw e;
+            }
+
+            lblVersion.Content = _VirtualBox.Version;
+            if (int.Parse(_VirtualBox.Version.Split('.')[0]) < 6)
+            {
+                MessageBox.Show(versionerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
             }
 
             var is64Bit = App.Is64Bit();
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Oracle\VirtualBox");
+
             string dir;
             if (key != null)
                 dir = key.GetValue("InstallDir") as string;
