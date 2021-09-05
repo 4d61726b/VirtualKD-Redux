@@ -32,7 +32,7 @@ namespace VirtualBoxIntegration
         {
             RegistryKey key;
             string locationerr = "Unable to locate VirtualBox. Please install the latest version of VirtualBox.";
-            string versionerr = "VirtualBox older than 6.0 detected. Please install VirtualBox 6.0 or later to use this version of VirtualKD-Redux.";
+            string versionerr = "VirtualBox older than 6.1 detected. Please install VirtualBox 6.1 or later to use this version of VirtualKD-Redux.";
 
             InitializeComponent();
 
@@ -59,7 +59,7 @@ namespace VirtualBoxIntegration
                     Environment.Exit(1);
                 }
 
-                if (int.Parse(version.Split('.')[0]) < 6)
+                if (!IsMinimumVirtualBoxVersion(version))
                 {
                     MessageBox.Show(versionerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
@@ -69,7 +69,7 @@ namespace VirtualBoxIntegration
             }
 
             lblVersion.Content = _VirtualBox.Version;
-            if (int.Parse(_VirtualBox.Version.Split('.')[0]) < 6)
+            if (!IsMinimumVirtualBoxVersion(_VirtualBox.Version))
             {
                 MessageBox.Show(versionerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(1);
@@ -90,6 +90,35 @@ namespace VirtualBoxIntegration
         }
         const string VirtualKDConfigEntry = "VBoxInternal/Devices/VirtualKD/0/Config/Path";
 
+        private bool IsMinimumVirtualBoxVersion(string version)
+        {
+            try
+            {
+                string[] sp = version.Split('.');
+                int major = int.Parse(sp[0]);
+
+                if (major < 6)
+                {
+                    return false;
+                }
+
+                if (major == 6)
+                {
+                    int minor = int.Parse(sp[1]);
+                    if (minor < 1)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+            }
+
+            return false;
+        }
 
         public class MachineWrapper : INotifyPropertyChanged
         {
