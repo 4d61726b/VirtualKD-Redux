@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
     </Filter>
+    <Filter Include="Header Files\VMAPI">
+      <UniqueIdentifier>{c77d6ecf-7103-4831-a0c7-c2bc20e371f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VMAPI">
+      <UniqueIdentifier>{064639d7-768d-4cc7-b926-529d90a752fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="32to64.cpp">
@@ -52,7 +58,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VMAPI\VirtualBox_i.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\VMAPI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +103,15 @@
     </ClInclude>
     <ClInclude Include="KDClient.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VMAPI\VirtualBox.h">
+      <Filter>Header Files\VMAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="VMAPI\VixC.h">
+      <Filter>Header Files\VMAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="VMAPI\VixCOM.h">
+      <Filter>Header Files\VMAPI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

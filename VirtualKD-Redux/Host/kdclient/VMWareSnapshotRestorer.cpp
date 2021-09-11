@@ -3,9 +3,15 @@
 #include <atlcomcli.h>
 #include <BazisLib/bzshlp/Win32/process.h>
 #include <BazisLib/bzscore/datetime.h>
-#include "vmapi/VixCOM.h"
 #include <BazisLib/bzscore/file.h>
+#include <BazisLib/bzscore/string.h>
 #include <atlsafe.h>
+
+#include "VMAPI/VixC.h"
+#ifndef VIX_C_SUPPORTED
+#pragma message("WARNING: Missing VIX header. VMware Workstation Pro must be installed during build for snapshot support.")
+#include "VMAPI/VixCOM.h"
+#endif
 
 extern HINSTANCE g_hThisDll;
 
@@ -19,7 +25,7 @@ HRESULT StartRevertingCurrentVMToLastSnapshot_VMWare()
         return E_FAIL;
 
     if (!_memicmp(tszDll + len - 6, L"64.dll", 12))
-        memcpy(tszDll + len - 6, L".dll", 10);
+        memcpy(tszDll + len - 6, L"32.dll", 10);
 
 
     BazisLib::String vmFile;
@@ -45,7 +51,8 @@ HRESULT StartRevertingCurrentVMToLastSnapshot_VMWare()
     return S_OK;
 }
 
-#ifndef _WIN64
+#if !defined(_WIN64)
+#if !defined(VIX_C_SUPPORTED)
 template <class _ReturnedInterface> static HRESULT WaitForJobResult(CComPtr<IVixLib> pVix, CComPtr<IJob> pJob, CComPtr<_ReturnedInterface> &pResult)
 {
     CComVariant results;
@@ -129,11 +136,85 @@ static HRESULT DoRevertVMToSnapshot(const wchar_t *pVMXFile)
 
     return S_OK;
 }
+#else
+static HRESULT DoRevertVMToSnapshot(const wchar_t* pVMXFile)
+{
+    VixDLL dll;
+    VixError err;
+    VixHandle hostHandle = VIX_INVALID_HANDLE;
+    VixHandle jobHandle = VIX_INVALID_HANDLE;
+    VixHandle vmHandle = VIX_INVALID_HANDLE;
+    VixHandle snapshotHandle = VIX_INVALID_HANDLE;
 
+    if (!dll.VixDLLIsValid())
+    {
+        return HRESULT_FROM_WIN32(ERROR_NOT_FOUND);
+    }
 
+    jobHandle = dll.VixHost_Connect(VIX_API_VERSION, VIX_SERVICEPROVIDER_DEFAULT, "", 0, "", "", 0, NULL, NULL, NULL);
+    err = dll.VixJob_Wait(jobHandle,
+        VIX_PROPERTY_JOB_RESULT_HANDLE,
+        &hostHandle,
+        VIX_PROPERTY_NONE);
+
+    if (VIX_FAILED(err))
+    {
+        goto abort;
+    }
+
+    dll.Vix_ReleaseHandle(jobHandle);
+
+    jobHandle = dll.VixVM_Open(hostHandle,
+        BazisLib::StringToANSIString(BazisLib::String(pVMXFile)).c_str(),
+        NULL, 
+        NULL);
+    err = dll.VixJob_Wait(jobHandle,
+        VIX_PROPERTY_JOB_RESULT_HANDLE,
+        &vmHandle,
+        VIX_PROPERTY_NONE);
+    
+    if (VIX_FAILED(err))
+    {
+        goto abort;
+    }
+
+    dll.Vix_ReleaseHandle(jobHandle);
+
+    err = dll.VixVM_GetCurrentSnapshot(vmHandle, &snapshotHandle);
+    
+    if (VIX_FAILED(err))
+    {
+        goto abort;
+    }
+
+    jobHandle = dll.VixVM_RevertToSnapshot(vmHandle,
+        snapshotHandle,
+        VIX_VMPOWEROP_LAUNCH_GUI,
+        VIX_INVALID_HANDLE,
+        NULL,
+        NULL);
+    err = dll.VixJob_Wait(jobHandle, VIX_PROPERTY_NONE);
+    
+    if (VIX_FAILED(err))
+    {
+        goto abort;
+    }
+
+    err = VIX_OK;
+
+abort:
+    dll.Vix_ReleaseHandle(jobHandle);
+    dll.Vix_ReleaseHandle(vmHandle);
+    dll.Vix_ReleaseHandle(snapshotHandle);
+
+    dll.VixHost_Disconnect(hostHandle);
+
+    return err;
+}
+#endif
 extern "C" void __declspec(dllexport) VMSnapshotRevertingEntry_VMWare()
 {
-    wchar_t *pVmxFile = wcsstr(GetCommandLineW(), L"/VMXFILE:");
+    wchar_t* pVmxFile = wcsstr(GetCommandLineW(), L"/VMXFILE:");
     if (!pVmxFile)
         ExitProcess(-1);
 

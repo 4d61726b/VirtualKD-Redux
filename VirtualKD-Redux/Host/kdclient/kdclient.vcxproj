@@ -185,6 +185,9 @@
     <ClInclude Include="tablemgr.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TerminationNotifier.h" />
+    <ClInclude Include="VMAPI\VirtualBox.h" />
+    <ClInclude Include="VMAPI\VixC.h" />
+    <ClInclude Include="VMAPI\VixCOM.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="kdclient.rc" />
