@@ -134,9 +134,9 @@ namespace BazisLib
 		{
 			TCHAR tsz[128];
 			if (!IncludeMsec)
-				_sntprintf_s(tsz, sizeof(tsz)/sizeof(tsz[0]), _T("%02d:%02d:%02d"), (int)GetTotalHours(), GetMinutes(), GetSeconds());
+				_sntprintf_s(tsz, _countof(tsz), _TRUNCATE, _T("%02d:%02d:%02d"), (int)GetTotalHours(), GetMinutes(), GetSeconds());
 			else
-				_sntprintf_s(tsz, sizeof(tsz)/sizeof(tsz[0]), _T("%02d:%02d:%02d.%03d"), (int)GetTotalHours(), GetMinutes(), GetSeconds(), (int)(GetTotalMilliseconds() % 1000));
+				_sntprintf_s(tsz, _countof(tsz), _TRUNCATE, _T("%02d:%02d:%02d.%03d"), (int)GetTotalHours(), GetMinutes(), GetSeconds(), (int)(GetTotalMilliseconds() % 1000));
 			return tsz;
 		}
 	};

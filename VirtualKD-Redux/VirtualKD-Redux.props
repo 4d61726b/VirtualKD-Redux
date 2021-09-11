@@ -19,6 +19,7 @@
     <ClCompile>
         <EnableEnhancedInstructionSet Condition="'$(Platform)' == 'Win32'">NoExtensions</EnableEnhancedInstructionSet>
         <WarningLevel>Level3</WarningLevel>
+        <PreprocessorDefinitions>_CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
         <AdditionalIncludeDirectories Condition="$(ProjectName.EndsWith('-kernel'))">$(WDK7_PATH)\inc\ddk;$(WDK7_PATH)\inc\api;$(WDK7_PATH)\inc\crt;$(SolutionDir)Lib\STLPort\stlport;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)Lib;$(SolutionDir)Lib\WTL\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
         <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>

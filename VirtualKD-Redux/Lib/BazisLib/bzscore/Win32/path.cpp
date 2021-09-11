@@ -26,7 +26,7 @@ String Path::GetSpecialDirectoryLocation(SpecialDirectoryType dir)
 		break;
 	case dirDrivers:
 		GetSystemDirectory(tsz, __countof(tsz));
-		_tcsncat_s(tsz, _T("\\drivers"), __countof(tsz));
+		_tcsncat_s(tsz, __countof(tsz), _T("\\drivers"), _TRUNCATE);
 		break;
 	case dirTemp:
 		GetTempPath(__countof(tsz), tsz);

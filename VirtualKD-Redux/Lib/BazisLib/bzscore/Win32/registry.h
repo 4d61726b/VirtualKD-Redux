@@ -249,14 +249,14 @@ namespace BazisLib
 				template<> ActionStatus WriteValue<LONGLONG>(LONGLONG *pValue)
 				{
 					TCHAR tsz[128];
-					int len = _sntprintf_s(tsz, sizeof(tsz), _T("%I64d"), *pValue);
+					int len = _sntprintf_s(tsz, _countof(tsz), _TRUNCATE, _T("%I64d"), *pValue);
 					return _assign(tsz, len);
 				}
 
 				template<> ActionStatus WriteValue<ULONGLONG>(ULONGLONG *pValue)
 				{
 					TCHAR tsz[128];
-					int len = _sntprintf_s(tsz, sizeof(tsz), _T("%I64u"), *pValue);
+					int len = _sntprintf_s(tsz, _countof(tsz), _TRUNCATE, _T("%I64u"), *pValue);
 					return _assign(tsz, len);
 				}
 #pragma endregion
