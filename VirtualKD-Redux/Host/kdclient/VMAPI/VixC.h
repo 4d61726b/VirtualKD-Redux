@@ -6,7 +6,6 @@
 #endif
 
 #ifdef VIX_C_SUPPORTED
-
 class VixDLL
 {
 private:
@@ -27,7 +26,6 @@ private:
     fVixHost_Disconnect m_VixHost_Disconnect = nullptr;
 
 public:
-
     VixDLL()
     {
         SetDllDirectoryW(L"C:\\Program Files (x86)\\VMware\\VMware Workstation");
@@ -47,8 +45,8 @@ public:
 
     bool VixDLLIsValid()
     {
-        return (m_hVixDLL != nullptr && m_VixHost_Connect != nullptr && m_VixJob_Wait != nullptr && m_Vix_ReleaseHandle != nullptr &&
-                m_VixVM_Open != nullptr && m_VixVM_GetCurrentSnapshot != nullptr && m_VixVM_RevertToSnapshot != nullptr);
+        return (m_hVixDLL != nullptr && m_VixHost_Connect != nullptr && m_VixJob_Wait != nullptr && m_Vix_ReleaseHandle != nullptr && m_VixVM_Open != nullptr &&
+                m_VixVM_GetCurrentSnapshot != nullptr && m_VixVM_RevertToSnapshot != nullptr && m_VixHost_Disconnect != nullptr);
     }
 
 
@@ -122,5 +120,4 @@ public:
         }
     }
 };
-
 #endif
