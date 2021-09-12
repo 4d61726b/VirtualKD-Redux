@@ -66,12 +66,27 @@ namespace VirtualBoxIntegration
 
         internal static void CheckKDClientPermissions(string myDir)
         {
-            if (!IsSystemOwned(Path.Combine(myDir, "kdclient64.dll")) || !IsSystemOwned(Path.Combine(myDir, "kdclient32.dll")))
+            string kdclient32 = Path.Combine(myDir, "kdclient32.dll");
+            string kdclient64 = Path.Combine(myDir, "kdclient64.dll");
+
+            if (!File.Exists(kdclient32))
+            {
+                MessageBox.Show("Missing kdclient32.dll. Please redownload VirtualKD-Redux and place it in the same directory as VirtualBoxIntegration", "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
+            if (!File.Exists(kdclient64))
+            {
+                MessageBox.Show("Missing kdclient64.dll. Please redownload VirtualKD-Redux and place it in the same directory as VirtualBoxIntegration", "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
+            if (!IsSystemOwned(kdclient32) || !IsSystemOwned(kdclient64))
             {
                 if (MessageBox.Show("VirtualBox won't load KDCLIENT32.DLL/KDCLIENT64.DLL unless it is owned by the System account. Do you want to fix it now?", "VirtualBoxIntegration", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    ChownToSystem(Path.Combine(myDir, "kdclient64.dll"));
-                    ChownToSystem(Path.Combine(myDir, "kdclient32.dll"));
+                    ChownToSystem(kdclient32);
+                    ChownToSystem(kdclient64);
                 }
             }
         }

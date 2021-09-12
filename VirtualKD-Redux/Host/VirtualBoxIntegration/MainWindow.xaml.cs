@@ -244,6 +244,8 @@ namespace VirtualBoxIntegration
 
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs("Machines"));
+
+            App.CheckKDClientPermissions(MyDir);
         }
         
 
