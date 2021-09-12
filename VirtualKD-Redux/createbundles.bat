@@ -3,9 +3,9 @@ mkdir Bundles
 mkdir Bundles\ReleaseBundle
 copy Build\Win32\Release\kdclient32.dll Bundles\ReleaseBundle\
 copy Build\x64\Release\kdclient64.dll Bundles\ReleaseBundle\
-copy Build\Win32\Release\vmmon32.exe Bundles\ReleaseBundle\
+REM copy Build\Win32\Release\vmmon32.exe Bundles\ReleaseBundle\
 copy Build\x64\Release\vmmon64.exe Bundles\ReleaseBundle\
-copy Build\Win32\Release\vmxpatch32.exe Bundles\ReleaseBundle\
+REM copy Build\Win32\Release\vmxpatch32.exe Bundles\ReleaseBundle\
 copy Build\x64\Release\vmxpatch64.exe Bundles\ReleaseBundle\
 copy Build\AnyCPU\Release\VirtualBoxIntegration.exe Bundles\ReleaseBundle\
 mkdir Bundles\ReleaseBundle\target32
@@ -23,9 +23,9 @@ copy Certs\VKD-Redux_CA.cer Bundles\ReleaseBundle\
 mkdir Bundles\DebugBundle
 copy Build\Win32\Debug\kdclient32.dll Bundles\DebugBundle\
 copy Build\x64\Debug\kdclient64.dll Bundles\DebugBundle\
-copy Build\Win32\Debug\vmmon32.exe Bundles\DebugBundle\
+REM copy Build\Win32\Debug\vmmon32.exe Bundles\DebugBundle\
 copy Build\x64\Debug\vmmon64.exe Bundles\DebugBundle\
-copy Build\Win32\Debug\vmxpatch32.exe Bundles\DebugBundle\
+REM copy Build\Win32\Debug\vmxpatch32.exe Bundles\DebugBundle\
 copy Build\x64\Debug\vmxpatch64.exe Bundles\DebugBundle\
 copy Build\AnyCPU\Debug\VirtualBoxIntegration.exe Bundles\DebugBundle\
 mkdir Bundles\DebugBundle\target32
