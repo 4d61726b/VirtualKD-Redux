@@ -6,10 +6,11 @@
 #endif
 
 #ifdef VIX_C_SUPPORTED
+#include <BazisLib\bzscore\Win32\registry.h>
+
 class VixDLL
 {
 private:
-    HMODULE m_hVixDLL = nullptr;
     typedef decltype(&VixHost_Connect) fVixHost_Connect;
     typedef decltype(&VixJob_Wait) fVixJob_Wait;
     typedef decltype(&Vix_ReleaseHandle) fVix_ReleaseHandle;
@@ -17,6 +18,7 @@ private:
     typedef decltype(&VixVM_GetCurrentSnapshot) fVixVM_GetCurrentSnapshot;
     typedef decltype(&VixVM_RevertToSnapshot) fVixVM_RevertToSnapshot;
     typedef decltype(&VixHost_Disconnect) fVixHost_Disconnect;
+    HMODULE m_hVixDLL = nullptr;
     fVixHost_Connect m_VixHost_Connect = nullptr;
     fVixJob_Wait m_VixJob_Wait = nullptr;
     fVix_ReleaseHandle m_Vix_ReleaseHandle = nullptr;
@@ -28,8 +30,14 @@ private:
 public:
     VixDLL()
     {
-        SetDllDirectoryW(L"C:\\Program Files (x86)\\VMware\\VMware Workstation");
-        m_hVixDLL = LoadLibraryW(L"vix.dll");
+        BazisLib::Win32::RegistryKey key (HKEY_LOCAL_MACHINE, L"SOFTWARE\\VMware, Inc.\\VMware Workstation", 0, false);
+        BazisLib::DynamicStringW dllpath = key[L"InstallPath"];
+
+        if (!dllpath.empty())
+        {
+            SetDllDirectoryW(dllpath.c_str());
+            m_hVixDLL = LoadLibraryW(L"vix.dll");
+        }
 
         if (m_hVixDLL)
         {
