@@ -14,7 +14,7 @@ echo Build failed!
 goto end
 
 :success
-call "createbundle.bat"
+call "createbundles.bat"
 
 :end
 pause

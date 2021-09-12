@@ -120,7 +120,12 @@ static HRESULT DoRevertVMToSnapshot()
     if (!SUCCEEDED(hR))
         return hR;
 
-    hR = pConsole->RestoreSnapshot(pSnapshot, &pProgress);
+    CComPtr<IMachine> pMachineSession;
+    hR = pSession->get_Machine(&pMachineSession);
+    if (!SUCCEEDED(hR))
+        return hR;
+
+    hR = pMachineSession->RestoreSnapshot(pSnapshot, &pProgress);
     if (!SUCCEEDED(hR))
         return hR;
 
@@ -133,16 +138,23 @@ static HRESULT DoRevertVMToSnapshot()
     CComBSTR sessionType = L"gui";
     pProgress = NULL;
 
-    hR = pMachine->LaunchVMProcess(pSession, sessionType, NULL, &pProgress);
-    if (!SUCCEEDED(hR))
-        return hR;
+    dtStart = BazisLib::DateTime::Now();
+
+    for (;;)
+    {
+        hR = pMachine->LaunchVMProcess(pSession, sessionType, NULL, &pProgress);
+        if (!SUCCEEDED(hR) && (dtStart.MillisecondsElapsed() >= 10000))
+            return hR;
+        if (SUCCEEDED(hR))
+            break;
+        Sleep(100);
+    }
 
     hR = WaitForCompletion(pProgress);
     if (!SUCCEEDED(hR))
         return hR;
 
     pSession->UnlockMachine();
-
 
     pProgress = NULL;
 
