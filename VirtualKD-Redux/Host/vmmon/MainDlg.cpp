@@ -979,7 +979,28 @@ void CMainDlg::RunDebugger(unsigned entryIndex)
             STARTUPINFO startupInfo = { 0, };
             startupInfo.cb = sizeof(startupInfo);
             PROCESS_INFORMATION processInfo = { 0, };
-            CreateProcess(debugger.empty() ? NULL : debugger.c_str(), tszCmdLine, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, m_DbgPreviewPath.c_str(), &startupInfo, &processInfo);
+
+            // Run windbg as standalone version
+            BOOL res = CreateProcess(debugger.empty() ? NULL : debugger.c_str(), tszCmdLine, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, m_DbgPreviewPath.c_str(), &startupInfo, &processInfo);
+            if (!res)
+            {
+                DWORD error = GetLastError();
+                if (error == ERROR_ACCESS_DENIED)
+                {
+                    // Run windbg as windows app
+                    DWORD UsernameSz = MAX_PATH;
+                    TCHAR Username[MAX_PATH];
+                    GetUserName(Username, &UsernameSz);
+
+                    TCHAR WinDbgPath[MAX_PATH];
+
+                    LPCTSTR WinDbgPath_Format = _T("C:\\Users\\%s\\AppData\\Local\\Microsoft\\WindowsApps\\WinDbgX.exe");
+                    _sntprintf_s(WinDbgPath, __countof(WinDbgPath), _TRUNCATE, WinDbgPath_Format, Username);
+                    debugger = WinDbgPath;
+
+                    res = CreateProcess(debugger.empty() ? NULL : debugger.c_str(), tszCmdLine, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, m_DbgPreviewPath.c_str(), &startupInfo, &processInfo);
+                }
+            }
             CloseHandle(processInfo.hProcess);
             CloseHandle(processInfo.hThread);
             proc.idDebuggerProcess = processInfo.dwProcessId;
