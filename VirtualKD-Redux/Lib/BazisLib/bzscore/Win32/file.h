@@ -362,7 +362,9 @@ namespace BazisLib
 					0,
 					0);
 				if (hFile == INVALID_HANDLE_VALUE)
-					return false;
+				{
+					return ::GetFileAttributes(Path) != INVALID_FILE_ATTRIBUTES;
+				}
 				CloseHandle(hFile);
 				return true;
 			}

@@ -14,13 +14,14 @@
 #define DEBUGGER_TYPE_WINDBG            (1)
 #define DEBUGGER_TYPE_CUSTOM            (2)
 #define DEBUGGER_TYPE_WINDBGPREVIEW     (3)
+#define DEBUGGER_TYPE_UNKNOWN           (999)
 
 DECLARE_SERIALIZEABLE_STRUC10_I(MonitorParams,
 BazisLib::String, ToolsPath, _T(""),
 BazisLib::String, PreviewPath, _T(""),
 bool, AutoInvokeDebugger, true,
 bool, AutoCloseDebugger, false,
-unsigned, DebuggerType, DEBUGGER_TYPE_CUSTOM,
+unsigned, DebuggerType, DEBUGGER_TYPE_UNKNOWN,
 bool, WaitForOS, true,
 bool, InitialBreakIn, true,
 unsigned, DebugLevel, 1,
@@ -43,7 +44,7 @@ private:
 
     MonitorParams m_Params;
     BazisLib::String m_DbgToolsPath;
-    BazisLib::String m_DbgPreviewPath;
+    BazisLib::String m_SideloadedDbgPreviewPath;
 
     CComboBox m_DebugLevel;
     PVOID m_pCallServerContext;
