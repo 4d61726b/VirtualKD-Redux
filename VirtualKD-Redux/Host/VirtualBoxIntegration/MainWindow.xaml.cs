@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VirtualBox;
 
 namespace VirtualBoxIntegration
 {
@@ -48,6 +49,7 @@ namespace VirtualBoxIntegration
             try
             {
                 _VirtualBox = new VirtualBox.VirtualBox();
+                
             }
             catch (System.InvalidCastException e)
             {
@@ -55,13 +57,13 @@ namespace VirtualBoxIntegration
 
                 if (version == null)
                 {
-                    MessageBox.Show(locationerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(locationerr, "VirtualBoxIntegration version null", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
 
                 if (!IsMinimumVirtualBoxVersion(version))
                 {
-                    MessageBox.Show(versionerr, "VirtualBoxIntegration", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(versionerr, "VirtualBoxIntegration not minimal virtualbox", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(1);
                 }
 
