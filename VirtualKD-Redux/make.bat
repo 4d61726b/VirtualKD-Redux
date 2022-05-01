@@ -1,5 +1,5 @@
-SET VS160COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools
-call "%VS160COMNTOOLS%\..\..\VC\Auxiliary\Build\vcvarsall.bat" x64
+SET VS170COMNTOOLS=C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools
+call "%VS170COMNTOOLS%\..\..\VC\Auxiliary\Build\vcvarsall.bat" x64
 echo on
 
 msbuild /m VirtualKD-Redux.sln /property:Platform=Win32 /property:Configuration="Debug" || goto error
