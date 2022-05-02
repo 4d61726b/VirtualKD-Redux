@@ -7,7 +7,7 @@
 * Support for the latest VirtualBox
 * Support starting with Windows XP up to the latest Windows 11
 * Support for the latest [WinDbg Preview](https://www.microsoft.com/en-us/p/windbg-preview/9pgjgd53tn86)
-* Toolchain modernization. Builds with Visual Studio 2019
+* Toolchain modernization. Builds with Visual Studio 2022
 * Simplified build system. No additional libraries required
 
 ## Downloads
@@ -19,11 +19,11 @@
 
 ## Build Instructions
 ### Prerequisites
-* Visual Studio 2019
+* Visual Studio 2022
 * Windows Driver Kit 7.1.0
 ### Steps
 1. Set the WDK7_PATH environment variable to the WDK 7.1.0 install path
-2. Edit make.bat to modify VS160COMNTOOLS path if needed
+2. Edit make.bat to modify VS170COMNTOOLS path if needed
 3. Run make.bat
 4. Use binaries produced in Bundle directory
 ## Issues or Feature Requests
