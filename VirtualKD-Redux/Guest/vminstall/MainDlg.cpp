@@ -214,47 +214,52 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
             WOW64FSRedirHolder holder;
             if (replaceKdcom)
             {
-                String kdcomBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), ConstString(_T("kdcom_old.dll")));
-                if (!File::Exists(kdcomBackup))
+                String kdcomBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), L"kdcom_old.dll");
+
+                for (DWORD i = 2; File::Exists(kdcomBackup); ++i)
                 {
-                    st = TakeOwnership(const_cast<LPTSTR>(String(fp).c_str()));
-                    if (!st.Successful())
-                    {
-                        ::MessageBox(HWND_DESKTOP,
-                            String::sFormat(_T("Cannot replace owner on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                            NULL,
-                            MB_ICONERROR);
-                        return 0;
-                    }
+                    String kdcomBackupCurrentName;
+                    kdcomBackupCurrentName.AppendFormat(L"kdcom_old_%u.dll", i);
+                    kdcomBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), kdcomBackupCurrentName);
+                }
 
-                    Win32::Security::TranslatedAcl dacl = File::GetDACLForPath(fp, &st);
-                    if (!st.Successful())
-                    {
-                        ::MessageBox(HWND_DESKTOP,
-                            String::sFormat(_T("Cannot query permissions on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                            NULL,
-                            MB_ICONERROR);
-                        return 0;
-                    }
-                    dacl.AddAllowingAce(STANDARD_RIGHTS_ALL | SPECIFIC_RIGHTS_ALL, BazisLib::Win32::Security::Sid::CurrentUserSid());
-                    st = File::SetDACLForPath(fp, dacl);
-                    if (!st.Successful())
-                    {
-                        ::MessageBox(HWND_DESKTOP,
-                            String::sFormat(_T("Cannot set permissions on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                            NULL,
-                            MB_ICONERROR);
-                        return 0;
-                    }
+                st = TakeOwnership(const_cast<LPTSTR>(String(fp).c_str()));
+                if (!st.Successful())
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(_T("Cannot replace owner on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
 
-                    if (!MoveFile(fp.c_str(), kdcomBackup.c_str()))
-                    {
-                        ::MessageBox(HWND_DESKTOP,
-                            String::sFormat(_T("Cannot rename old kdcom.dll: %s"), MAKE_STATUS(ActionStatus::FromLastError()).GetMostInformativeText().c_str()).c_str(),
-                            NULL,
-                            MB_ICONERROR);
-                        return 0;
-                    }
+                Win32::Security::TranslatedAcl dacl = File::GetDACLForPath(fp, &st);
+                if (!st.Successful())
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(_T("Cannot query permissions on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+                dacl.AddAllowingAce(STANDARD_RIGHTS_ALL | SPECIFIC_RIGHTS_ALL, BazisLib::Win32::Security::Sid::CurrentUserSid());
+                st = File::SetDACLForPath(fp, dacl);
+                if (!st.Successful())
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(_T("Cannot set permissions on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+
+                if (!MoveFile(fp.c_str(), kdcomBackup.c_str()))
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(_T("Cannot rename old kdcom.dll: %s"), MAKE_STATUS(ActionStatus::FromLastError()).GetMostInformativeText().c_str()).c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
                 }
             }
             st = SaveResourceToFile(fp, _T("KDVMDLL"), IDR_KDVM);
