@@ -11,6 +11,12 @@
 #include "kdrpc.h"
 #include "vboxrpc.h"
 
+// There's an old bug dating back to around XP SP2 where calling MmGetSystemRoutineAddress on a non-existant routine name
+// can result in a BSOD. It's been fixed since Vista but because VirtualKD-Redux will ALWAYS support XP RTM and beyond, we can never use that function.
+#include "moduleapi.h"
+
+#define SGD_KD_DEBUGGER_ENABLED  (10)
+
 namespace
 {
     char g_PacketBuffer[131072 + 1024];
@@ -49,6 +55,83 @@ ULONG KdVMGetActiveCallCount()
 {
     return KdVmActiveCallCount;
 }
+
+extern "C" NTSYSAPI PIMAGE_NT_HEADERS NTAPI RtlImageNtHeader(IN PVOID ModuleAddress);
+#include <ntimage.h>
+static PVOID GetModuleBaseAddress(PVOID pAddr)
+{
+    CHAR* pBase = (char*)(((ULONG_PTR)(void*)pAddr / PAGE_SIZE) * PAGE_SIZE);
+    for (int i = 0; i < (1024 * 1024 * 50) / PAGE_SIZE; i++)
+    {
+        PVOID pCurAddr = pBase - PAGE_SIZE * i;
+
+        __try
+        {
+            if (!MmIsAddressValid(pCurAddr))
+            {
+                continue;
+            }
+
+            PIMAGE_NT_HEADERS pHeaders = RtlImageNtHeader(pCurAddr);
+            if (pHeaders)
+            {
+                return pCurAddr;
+            }
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER)
+        {
+        }
+    }
+
+    return NULL;
+}
+
+static BOOLEAN GetKdDebuggerEnabled()
+{
+    typedef void(*fnRtlGetSystemGlobalData)(ULONGLONG, PVOID, ULONGLONG);
+    static BOOLEAN bCheckedForFunc = FALSE;
+    static fnRtlGetSystemGlobalData RtlGetSystemGlobalData = nullptr;
+
+    if (!bCheckedForFunc)
+    {
+        bCheckedForFunc = TRUE;
+        RtlGetSystemGlobalData = (fnRtlGetSystemGlobalData)KernelGetProcAddress(GetModuleBaseAddress(ExAllocatePool), "RtlGetSystemGlobalData");
+    }
+
+    if (RtlGetSystemGlobalData)
+    {
+        BOOLEAN bVal = 0;
+        RtlGetSystemGlobalData(SGD_KD_DEBUGGER_ENABLED, &bVal, sizeof(bVal));
+        return bVal;
+    }
+    else
+    {
+        return SharedUserData->KdDebuggerEnabled;
+    }
+}
+
+static void SetKdDebuggerEnabled(BOOLEAN bVal)
+{
+    typedef void(*fnRtlSetSystemGlobalData)(ULONGLONG, PVOID, ULONGLONG);
+    static BOOLEAN bCheckedForFunc = FALSE;
+    static fnRtlSetSystemGlobalData RtlSetSystemGlobalData = nullptr;
+
+    if (!bCheckedForFunc)
+    {
+        bCheckedForFunc = TRUE;
+        RtlSetSystemGlobalData = (fnRtlSetSystemGlobalData)KernelGetProcAddress(GetModuleBaseAddress(ExAllocatePool), "RtlSetSystemGlobalData");
+    }
+
+    if (RtlSetSystemGlobalData)
+    {
+        RtlSetSystemGlobalData(SGD_KD_DEBUGGER_ENABLED, &bVal, sizeof(bVal));
+    }
+    else
+    {
+        SharedUserData->KdDebuggerEnabled = bVal;
+    }
+}
+
 
 class InterlockedIncrementer
 {
@@ -220,7 +303,7 @@ public:
         ULONG globals = kKDDebuggerEnabledValueAvailable;
         if (KD_DEBUGGER_NOT_PRESENT)
             globals |= kKDDebuggerNotPresentSet;
-        globals |= (SharedUserData->KdDebuggerEnabled) << 8;
+        globals |= (GetKdDebuggerEnabled() << 8);
 
         if (!channel.PrepareSend(sizeof(g_szRPCCommandHeader) + 2 * sizeof(ULONG) + 2 * sizeof(SendableKdBuffer) + sizeof(KD_CONTEXT)))
             return KD_RECV_CODE_FAILED;
@@ -285,7 +368,7 @@ public:
         globals = params[4];
         KD_DEBUGGER_NOT_PRESENT = ((globals & kKDDebuggerNotPresentSet) != 0);
         if (globals & kKDDebuggerEnabledValueAvailable)
-            SharedUserData->KdDebuggerEnabled = (globals >> 8) & 0xFF;
+            SetKdDebuggerEnabled((globals >> 8) & 0xFF);
 
 #ifdef VKD_EXPERIMENTAL_PACKET_POLL_DIVIDER_SUPPORT
         s_PacketPollRequestsToSkip = params[5];
@@ -309,7 +392,7 @@ public:
             ULONG globals = kKDDebuggerEnabledValueAvailable;
             if (KD_DEBUGGER_NOT_PRESENT)
                 globals |= kKDDebuggerNotPresentSet;
-            globals |= (SharedUserData->KdDebuggerEnabled) << 8;
+            globals |= (GetKdDebuggerEnabled() << 8);
             if (FirstBuffer)
                 Size1 = FirstBuffer->Length;
             if (SecondBuffer)
@@ -359,7 +442,7 @@ public:
 
             KD_DEBUGGER_NOT_PRESENT = ((globals & kKDDebuggerNotPresentSet) != 0);
             if (globals & kKDDebuggerEnabledValueAvailable)
-                SharedUserData->KdDebuggerEnabled = (globals >> 8) & 0xFF;
+                SetKdDebuggerEnabled((globals >> 8) & 0xFF);
 
             //Retry request if a droppable packet was not delivered
             if (globals & kRetryKdSendPacket)
@@ -382,34 +465,24 @@ NTSTATUS __stdcall KdPower(void *, void *)
     return STATUS_NOT_SUPPORTED;
 }
 
-
-extern "C" NTSYSAPI PIMAGE_NT_HEADERS NTAPI RtlImageNtHeader(IN PVOID ModuleAddress);
-#include <ntimage.h>
-
 NTSTATUS __stdcall KdDebuggerInitialize0(PVOID lpLoaderParameterBlock)
 {
-    s_bVBoxDetected = false;
-    NTSTATUS st = ChannelHelper<VMWareChannel>::KdDebuggerInitialize0(lpLoaderParameterBlock);
-    if ((st == STATUS_RETRY) && s_bVBoxDetected)
-        st = ChannelHelper<VBoxChannel>::KdDebuggerInitialize0(lpLoaderParameterBlock);
+    NTSTATUS st;
 
-    if (s_bVBoxDetected)
+    PVOID pAddr = GetModuleBaseAddress(KdDebuggerInitialize0);
+    PIMAGE_NT_HEADERS pHeaders = RtlImageNtHeader(pAddr);
+    if (pHeaders)
     {
-        char *pBase = (char *)(((ULONG_PTR)(void *)KdDebuggerInitialize0 / PAGE_SIZE) * PAGE_SIZE);
-        for (int i = 0; i < 1024 * 1024 / PAGE_SIZE; i++)
-        {
-            PIMAGE_NT_HEADERS pHeaders = RtlImageNtHeader(pBase - PAGE_SIZE * i);
-            if (pHeaders)
-            {
-                //Prevent the current module from being relocated to a different address and breaking the physical/virtual address mapping
-                //for the KD buffer.
-                pHeaders->FileHeader.Characteristics |= IMAGE_FILE_RELOCS_STRIPPED;
-                break;
-            }
-        }
+        //Prevent the current module from being relocated to a different address and breaking the physical/virtual address mapping
+        //for the KD buffer.
+        pHeaders->FileHeader.Characteristics |= IMAGE_FILE_RELOCS_STRIPPED;
     }
 
-    return st;
+    s_bVBoxDetected = false;
+    st = ChannelHelper<VMWareChannel>::KdDebuggerInitialize0(lpLoaderParameterBlock);
+    if ((st == STATUS_RETRY) && s_bVBoxDetected)
+        st = ChannelHelper<VBoxChannel>::KdDebuggerInitialize0(lpLoaderParameterBlock);
+    return STATUS_SUCCESS;
 }
 
 VOID __stdcall KdSendPacket(__in ULONG PacketType,

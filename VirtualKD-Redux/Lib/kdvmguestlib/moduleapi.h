@@ -58,7 +58,7 @@ KernelGetModuleBase(
 
             for (i = 0; i < ((PSYSTEM_MODULE_INFORMATION)(pSystemInfoBuffer))->ModulesCount; i++)
             {
-                if (_stricmp((char *)pSysModuleEntry[i].Name +
+                if (_stricmp((char*)pSysModuleEntry[i].Name +
                     pSysModuleEntry[i].NameOffset, pModuleName) == 0)
                 {
                     pModuleBase = pSysModuleEntry[i].ImageBaseAddress;
@@ -92,19 +92,17 @@ KernelGetProcAddress(
     PCHAR pFunctionName
 )
 {
-    ASSERT(ModuleBase && pFunctionName);
     PVOID pFunctionAddress = NULL;
 
-    ULONG size = 0;
-    PIMAGE_EXPORT_DIRECTORY exports = (PIMAGE_EXPORT_DIRECTORY)
-        RtlImageDirectoryEntryToData(ModuleBase, TRUE, IMAGE_DIRECTORY_ENTRY_EXPORT, &size);
+    ULONG                 size = 0;
+    PIMAGE_DOS_HEADER dos = (PIMAGE_DOS_HEADER)ModuleBase;
+    PIMAGE_NT_HEADERS nt = (PIMAGE_NT_HEADERS)((ULONGLONG)ModuleBase + dos->e_lfanew);
 
-#pragma warning(push)
-#pragma warning(disable: 4311)
-#pragma warning(disable: 4302)
-#pragma warning(disable: 4312)
-    ULONG_PTR addr = (ULONG_PTR)(PUCHAR)((ULONG)exports - (ULONG)ModuleBase);
-#pragma warning(pop)
+    PIMAGE_DATA_DIRECTORY expdir = (PIMAGE_DATA_DIRECTORY)
+        (nt->OptionalHeader.DataDirectory + IMAGE_DIRECTORY_ENTRY_EXPORT);
+    ULONG                 addr = expdir->VirtualAddress;
+    PIMAGE_EXPORT_DIRECTORY exports = (PIMAGE_EXPORT_DIRECTORY)((ULONGLONG)ModuleBase + addr);
+
 
     PULONG functions = (PULONG)((ULONG_PTR)ModuleBase + exports->AddressOfFunctions);
     PSHORT ordinals = (PSHORT)((ULONG_PTR)ModuleBase + exports->AddressOfNameOrdinals);

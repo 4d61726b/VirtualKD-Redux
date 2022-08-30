@@ -9,7 +9,7 @@
 #include <Bazislib/bzshlp/WinKernel/device.h>
 #include "kdvmguestlib/kdvm.h"
 #include "kdvmguestlib/kdxxx.h"
-#include "moduleapi.h"
+#include "kdvmguestlib/moduleapi.h"
 
 #include <Bazislib/bzscore/WinKernel/security.h>
 #include <BazisLib/bzscore/WinKernel/init.h>
