@@ -258,7 +258,8 @@ bool IsVMSessionPatched(unsigned PID)
         return (Call64BitKDCLIENT(kIsSessionPatched, PID) == 1);
     }
 #endif
-    if (GetRemoteModuleHandle64Aware(PID, _T("VBoxKD.dll")) || GetRemoteModuleHandle64Aware(PID, _T("VBoxKD64.dll")))
+
+    if (GetRemoteModuleHandle64Aware(PID, _T("kdclient64.dll")))
         return true;
     RemoteDllLoader ldr(g_hThisDll, false);
     return (ldr.FindLibraryInProcess(PID, true) != 0);
@@ -285,7 +286,7 @@ HANDLE StartPatcherThread(unsigned PID, DWORD *pPatcherThreadID = NULL)
         if (!s_bUserWarnedAboutVBox)
         {
             s_bUserWarnedAboutVBox = true;
-            MessageBox(0, _T("VirtualKD-Redux cannot patch VirtualBox on-the-fly.\r\nPlease register the VirtualKD device for VirtualBox by running \"regsvr32 VBoxKD64.dll\". If this does not help, close all instances of VirtualBox and terminate VBoxSVC.exe and try again."),
+            MessageBox(0, _T("VirtualKD-Redux cannot patch VirtualBox. Ensure that the VM is \"Enabled\" in the VirtualBox Integration GUI"),
                 _T("VirtualKD-Redux"),
                 MB_ICONWARNING | MB_TASKMODAL);
         }

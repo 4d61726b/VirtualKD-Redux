@@ -709,15 +709,27 @@ void CMainDlg::PerformProcessActions(PatchedProcess &proc, TimeSpan &runTime, bo
             proc.hLogPipe = CreateLogPipe(proc.PID);
     }
 
-    if (proc.State == PatchPending)
+    do
     {
-        if (runTime.GetTotalSeconds() > m_Params.PatchDelay)
+        if (proc.State == PatchPending)
         {
-            bool started = InitiatePatching(proc);
-            if (pPatchingStarted)
-                *pPatchingStarted = started;
+            if (runTime.GetTotalSeconds() > m_Params.PatchDelay)
+            {
+                // VirtualBox 7.x seems to start slower than earlier versions. Add some additional time for this (if needed)
+                if (proc.vmType == kVBox64)
+                {
+                    if (!IsVMSessionPatched(proc.PID) && runTime.GetTotalSeconds() < m_Params.PatchDelay * 4)
+                    {
+                        break;
+                    }
+                }
+
+                bool started = InitiatePatching(proc);
+                if (pPatchingStarted)
+                    *pPatchingStarted = started;
+            }
         }
-    }
+    } while (0);
 
     if (proc.State == PatchInProgress)
     {

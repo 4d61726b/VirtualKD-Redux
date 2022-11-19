@@ -17,7 +17,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="VirtualKD integration" DisplayMemberBinding="{Binding Status}"/>
+                    <GridViewColumn Header="VirtualKD-Redux Integration" DisplayMemberBinding="{Binding Status}"/>
                     <GridViewColumn Header="">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
