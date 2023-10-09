@@ -7,6 +7,8 @@
 #include "stdafx.h"
 #include <BazisLib/bzscore/Win32/registry.h>
 
+#include "regconfig.h"
+
 bool HookVmware(HINSTANCE hThisDLL);
 
 void OnDLLProcessDetach();
@@ -39,8 +41,7 @@ extern "C" bool DllRegisterServer()
 {
     TCHAR tszThisDLL[MAX_PATH];
     GetModuleFileName(g_hThisDll, tszThisDLL, __countof(tszThisDLL));
-
-    BazisLib::RegistryKey key(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\SysProgs\\VirtualKD\\VirtualBoxIntegration"));
+    BazisLib::RegistryKey key(HKEY_LOCAL_MACHINE, VKD_REGISTRY_VIRTUALBOX_PATH);
     key[_T("KDClientDLLPath")] = tszThisDLL;
 
     return true;

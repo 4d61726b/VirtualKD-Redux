@@ -184,6 +184,7 @@
     <ClCompile Include="vmmon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Lib\regconfig.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="PatchList.h" />
     <ClInclude Include="resource.h" />

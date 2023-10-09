@@ -1,0 +1,6 @@
+.vs/
+Build/
+Bundles/
+obj/
+
+*.vcxproj.user

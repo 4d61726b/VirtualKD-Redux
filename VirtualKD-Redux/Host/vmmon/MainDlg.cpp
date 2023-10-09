@@ -30,7 +30,6 @@ enum
 
 using namespace BazisLib;
 
-static const WCHAR wszRegistryPath[] = VKD_REGISTRY_CONFIG_PATH L"\\Monitor";
 static const String strWindbgPreviewStorePath = Path::GetSpecialDirectoryLocation(Win32::SpecialDirFromCSIDL(CSIDL_LOCAL_APPDATA)) + String(L"\\Microsoft\\WindowsApps\\WinDbgX.exe");
 
 static BOOL IsWindbgPreviewInstalled()
@@ -93,7 +92,7 @@ CMainDlg::CMainDlg()
     GetSystemInfo(&sysinfo);
     m_ProcessorCount = sysinfo.dwNumberOfProcessors;
 
-    RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
+    RegistryKey key(HKEY_LOCAL_MACHINE, VKD_REGISTRY_MONITOR_PATH);
     Win32::RegistrySerializer::Deserialize(key, m_Params);
 
     String toolsPath;
@@ -414,7 +413,7 @@ LRESULT CMainDlg::OnParamsChanged(WORD /*wNotifyCode*/, WORD /* wID */, HWND /*h
 
 void CMainDlg::SaveParamsToRegistry()
 {
-    RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
+    RegistryKey key(HKEY_LOCAL_MACHINE, VKD_REGISTRY_MONITOR_PATH);
     BazisLib::Win32::RegistrySerializer::Serialize(key, m_Params);
 }
 

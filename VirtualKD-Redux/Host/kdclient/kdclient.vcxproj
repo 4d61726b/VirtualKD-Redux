@@ -173,6 +173,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Lib\regconfig.h" />
     <ClInclude Include="32to64.h" />
     <ClInclude Include="cmdline.h" />
     <ClInclude Include="findproc.h" />

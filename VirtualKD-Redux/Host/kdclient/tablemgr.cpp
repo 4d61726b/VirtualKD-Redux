@@ -474,10 +474,8 @@ RPCTableManager<Record_T>::RPCTableManager(HINSTANCE hThisDLL)
     : m_Database(CreateAndGetDatabaseDirectory())
     , m_pPatchedEntry(NULL)
 {
-    const WCHAR wszRegistryPath[] = VKD_REGISTRY_CONFIG_PATH L"\\Patcher";
-    RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
+    RegistryKey key(HKEY_LOCAL_MACHINE, VKD_REGISTRY_PATCHER_PATH, 0, false);
     BazisLib::Win32::RegistrySerializer::Deserialize(key, m_Params);
-    BazisLib::Win32::RegistrySerializer::Serialize(key, m_Params);
 }
 
 template<class Record_T>

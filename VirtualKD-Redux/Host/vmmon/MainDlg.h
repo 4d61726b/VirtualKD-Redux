@@ -7,27 +7,8 @@
 #pragma once
 
 #include "patchlist.h"
-#include <BazisLib/bzshlp/serializer.h>
+#include "regconfig.h"
 #include <BazisLib/bzscore/file.h>
-
-#define DEBUGGER_TYPE_KD                (0)
-#define DEBUGGER_TYPE_WINDBG            (1)
-#define DEBUGGER_TYPE_CUSTOM            (2)
-#define DEBUGGER_TYPE_WINDBGPREVIEW     (3)
-#define DEBUGGER_TYPE_UNKNOWN           (999)
-
-DECLARE_SERIALIZEABLE_STRUC10_I(MonitorParams,
-BazisLib::String, ToolsPath, _T(""),
-BazisLib::String, PreviewPath, _T(""),
-bool, AutoInvokeDebugger, true,
-bool, AutoCloseDebugger, false,
-unsigned, DebuggerType, DEBUGGER_TYPE_UNKNOWN,
-bool, WaitForOS, true,
-bool, InitialBreakIn, true,
-unsigned, DebugLevel, 1,
-unsigned, PatchDelay, 3,
-BazisLib::String, CustomDebuggerTemplate, _T("cmd.exe /c \"$(toolspath)\\test.cmd\" $(pipename)"));
-
 
 //! Main VMMON.EXE dialog
 class CMainDlg : public CDialogImpl<CMainDlg>, public CDialogResize<CMainDlg>

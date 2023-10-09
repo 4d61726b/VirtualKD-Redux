@@ -9,28 +9,18 @@
 #include <BazisLib/bzshlp/smvec.h>
 #include <list>
 #include <BazisLib/bzshlp/serializer.h>
+#include "regconfig.h"
 
 static const int s_EnableLogging = true;
 
-DECLARE_SERIALIZEABLE_STRUC5(PatchInfoRecord,
-unsigned, TimeStamp,
-unsigned, FileSize,
-unsigned, FirstSectionSize,
-
-unsigned, DispatcherTableOffset,
-unsigned, EntryCount);
-
 using namespace BazisLib;
 
-DECLARE_SERIALIZEABLE_STRUC6_I(PatchingParams,
-bool, AllowPatchingAtTableStart, true,
-bool, DefaultPatchingAtTableStart, false,
-//							   String, VMWareCommandToReplace, false,
-bool, AllowReplacingFirstCommand, false,
-bool, WaitForNonZeroFirstCommand, true,
-unsigned, MinRunTimeBeforePatch, 10000,
-bool, DisablePatchDatabase, true);
-
+DECLARE_SERIALIZEABLE_STRUC5(PatchInfoRecord,
+    unsigned, TimeStamp,
+    unsigned, FileSize,
+    unsigned, FirstSectionSize,
+    unsigned, DispatcherTableOffset,
+    unsigned, EntryCount);
 
 //! Stores information about \ref guestrpc handler table location for different versions of VMWARE-VMX.EXE
 class PatchInfoDatabase

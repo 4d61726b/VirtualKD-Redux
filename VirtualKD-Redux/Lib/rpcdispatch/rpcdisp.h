@@ -7,6 +7,7 @@
 #pragma once
 #include "kdvmguestlib/kdrpc.h"
 #include "kdvmguestlib/kdxxx.h"
+#include "regconfig.h"
 #include <BazisLib/bzscore/assert.h>
 #include <BazisLib/bzshlp/Win32/RegistrySerializer.h>
 
@@ -65,16 +66,11 @@ private:
         offset += Size;
     }
 
-    DECLARE_SERIALIZEABLE_STRUC1_I(KdClientParams,
-    unsigned, VersionOverride, 0);
-
     static DWORD GetVirtualKDReduxVersion()
     {
-        const WCHAR wszRegistryPath[] = VKD_REGISTRY_CONFIG_PATH;
-        BazisLib::Win32::RegistryKey key(HKEY_CURRENT_USER, wszRegistryPath);
+        BazisLib::Win32::RegistryKey key(HKEY_LOCAL_MACHINE, VKD_REGISTRY_CONFIG_PATH, 0, false);
         KdClientParams params;
         BazisLib::Win32::RegistrySerializer::Deserialize(key, params);
-        BazisLib::Win32::RegistrySerializer::Serialize(key, params);
 
         if (params.VersionOverride != 0)
         {

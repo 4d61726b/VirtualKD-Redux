@@ -113,6 +113,9 @@
     <ClInclude Include="VMAPI\VixCOM.h">
       <Filter>Header Files\VMAPI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Lib\regconfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="kdclient.rc">

@@ -10,14 +10,6 @@
 #include <BazisLib/bzscore/file.h>
 #include <vkdversion.h>
 
-DECLARE_SERIALIZEABLE_STRUC4_I(TraceAssistParams,
-bool, TraceAssistEnabled, false,
-BazisLib::String, MessagePrefix, _T(""),
-BazisLib::String, LogFileDirectory, _T(""),
-bool, OverwriteFileOnStart, false);
-
-static const WCHAR wszTraceAssistRegPath[] = VKD_REGISTRY_CONFIG_PATH "\\TraceAssist";
-
 //! Allows saving DbgPrint() messages directly to files on host machine bypassing WinDBG.
 class TraceAssistant
 {
@@ -31,8 +23,8 @@ public:
     //! Reloads TraceAssist parameters from registry
     void ReloadParams()
     {
-        BazisLib::RegistryKey key(HKEY_CURRENT_USER, wszTraceAssistRegPath);
-        BazisLib::Win32::RegistrySerializer::Serialize(key, m_Params);
+        BazisLib::RegistryKey key(HKEY_LOCAL_MACHINE, VKD_REGISTRY_TRACE_ASSIST_PATH, 0, false);
+        BazisLib::Win32::RegistrySerializer::Deserialize(key, m_Params);
         m_Prefix = BazisLib::StringToANSIString(m_Params.MessagePrefix);
     }
 

@@ -10,8 +10,37 @@
 
 #include "MainDlg.h"
 #include <BazisLib/bzscore/Win32/memdbg.h>
+#include <BazisLib/bzshlp/Win32/RegistrySerializer.h>
+
+#include "regconfig.h"
+#include "vkdversion.h"
 
 CAppModule _Module;
+
+// Writes the initial configuration if needed. We have to do it here since we are elevated.
+// The process with kdclient loaded in it might not have the permissions to write.
+static void CreateRegConfig()
+{
+    KdClientParams kcParams;
+    BazisLib::Win32::RegistryKey regkeyConfig(HKEY_LOCAL_MACHINE, VKD_REGISTRY_CONFIG_PATH);
+    BazisLib::Win32::RegistrySerializer::Deserialize(regkeyConfig, kcParams);
+    BazisLib::Win32::RegistrySerializer::Serialize(regkeyConfig, kcParams);
+
+    PatchingParams patchParams;
+    BazisLib::Win32::RegistryKey regkeyPatcher(HKEY_LOCAL_MACHINE, VKD_REGISTRY_PATCHER_PATH);
+    BazisLib::Win32::RegistrySerializer::Deserialize(regkeyPatcher, patchParams);
+    BazisLib::Win32::RegistrySerializer::Serialize(regkeyPatcher, patchParams);
+
+    TraceAssistParams taParams;
+    BazisLib::Win32::RegistryKey regkeyTraceAssist(HKEY_LOCAL_MACHINE, VKD_REGISTRY_TRACE_ASSIST_PATH);
+    BazisLib::Win32::RegistrySerializer::Deserialize(regkeyTraceAssist, taParams);
+    BazisLib::Win32::RegistrySerializer::Serialize(regkeyTraceAssist, taParams);
+
+    MonitorParams monParams;
+    BazisLib::Win32::RegistryKey regkeyMonitor(HKEY_LOCAL_MACHINE, VKD_REGISTRY_MONITOR_PATH);
+    BazisLib::Win32::RegistrySerializer::Deserialize(regkeyMonitor, monParams);
+    BazisLib::Win32::RegistrySerializer::Serialize(regkeyMonitor, monParams);
+}
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
@@ -25,6 +54,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
             return 1;
         }
     }
+
+    CreateRegConfig();
 
     BazisLib::MemoryLeakDetector leakDetector;
     UNREFERENCED_PARAMETER(leakDetector);
