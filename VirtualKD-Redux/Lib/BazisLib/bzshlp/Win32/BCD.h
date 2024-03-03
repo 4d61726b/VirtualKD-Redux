@@ -86,6 +86,7 @@ for each(BCDObject obj in store.GetObjects())
 				BcdLibraryBoolean_DisplayOptionsEdit                 = 0x16000041,
 				BcdLibraryBoolean_GraphicsModeDisabled               = 0x16000046,
 				BcdLibraryInteger_ConfigAccessPolicy                 = 0x15000047,
+				BcdLibraryBoolean_NoIntegrityChecks                  = 0x16000048,
 				BcdLibraryBoolean_AllowPrereleaseSignatures          = 0x16000049,
 
 				//MemDiag object elements

@@ -8,6 +8,7 @@
 #include <map>
 
 bool IsWin8OrLater();
+bool IsWin11OrLater();
 
 using namespace BootEditor;
 
@@ -103,6 +104,12 @@ namespace VistaBCD
                     return st;
             }
 
+            if (IsWin11OrLater())
+            {
+                st = m_Object.SetElement(BcdLibraryBoolean_NoIntegrityChecks, true);
+                if (!st.Successful())
+                    return st;
+            }
             return MAKE_STATUS(Success);
         }
 

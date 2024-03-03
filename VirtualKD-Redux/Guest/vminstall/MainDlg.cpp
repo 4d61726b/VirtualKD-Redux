@@ -6,41 +6,147 @@
 #include "resource.h"
 #include "resource2.h"
 
+#include <ImageHlp.h>
+
 #include "MainDlg.h"
 #include "install.h"
 #include <BazisLib/bzscore/Win32/security.h>
 #include <BazisLib/bzscore/file.h>
 #include <BazisLib/bzshlp/Win32/wow64.h>
 #include <BazisLib/bzscore/Win32/registry.h>
+#include <BazisLib/bzshlp/Win32/filemap.h>
 
 #include "vkdversion.h"
 
 using namespace BazisLib;
 using namespace BootEditor;
 
-static WORD GetOSVersion()
+static OSVERSIONINFOEXW GetOSVersion()
 {
     typedef void (WINAPI* RtlGetVersion)(OSVERSIONINFOEXW*);
     OSVERSIONINFOEXW info = { 0 };
     info.dwOSVersionInfoSize = sizeof(info);
     ((RtlGetVersion)GetProcAddress(GetModuleHandleW(L"ntdll"), "RtlGetVersion"))(&info);
-    return (WORD)((info.dwMajorVersion << 8) | info.dwMinorVersion);
+    return info;
 }
 
 bool IsVistaOrLater()
 {
-    return GetOSVersion() >= 0x0600;
+    OSVERSIONINFOEXW info = GetOSVersion();
+    return info.dwMajorVersion >= 6;
 }
 
 bool IsWin8OrLater()
 {
-    return GetOSVersion() >= 0x0602;
+    OSVERSIONINFOEXW info = GetOSVersion();
+    if (info.dwMajorVersion > 6)
+    {
+        return true;
+    }
+    else if (info.dwMajorVersion == 6)
+    {
+        return info.dwMinorVersion >= 2;
+    }
+
+    return false;
 }
 
 bool IsWin10OrLater()
 {
-    return GetOSVersion() >= 0x0a00;
+    OSVERSIONINFOEXW info = GetOSVersion();
+    return info.dwMajorVersion >= 10;
 }
+
+bool IsWin11OrLater()
+{
+    OSVERSIONINFOEXW info = GetOSVersion();
+
+    if (info.dwMajorVersion > 10)
+    {
+        return true;
+    }
+    else if (info.dwMajorVersion < 10)
+    {
+        return false;
+    }
+
+    return info.dwBuildNumber >= 22000;
+}
+
+static bool IsRunningVMWareHypervisor()
+{
+    RegistryKey key(HKEY_LOCAL_MACHINE, L"HARDWARE\\DESCRIPTION\\System\\BIOS");
+    if (!key.Valid())
+    {
+        return false;
+    }
+
+    String strBIOSVersion;
+    if (!key[L"BIOSVersion"].ReadValue(&strBIOSVersion).Successful())
+    {
+        return false;
+    }
+
+    return strBIOSVersion.compare(0, _countof(L"VMW") - 1, L"VMW") == 0;
+}
+
+static bool IsWinloadPatchApplicable(bool* pbRecommendWinloadPatch)
+{
+    *pbRecommendWinloadPatch = false;
+
+#ifdef _WIN64
+    if (!IsWin11OrLater())
+    {
+        return false;
+    }
+
+    *pbRecommendWinloadPatch = !IsRunningVMWareHypervisor();
+
+    return true;
+#else
+    return false;
+#endif
+}
+
+static bool IsLegacyBoot()
+{
+    OSVERSIONINFOEXW info = GetOSVersion();
+
+    if (info.dwMajorVersion < 6 ||
+       (info.dwMajorVersion == 6 && info.dwMinorVersion == 0 && info.wServicePackMajor == 0))
+    {
+        return true;
+    }
+    
+    WCHAR wcFirmwareType[_countof("UEFI")];
+    if (!GetEnvironmentVariableW(L"%FIRMWARE_TYPE%", wcFirmwareType, sizeof(wcFirmwareType)))
+    {
+        return false;
+    }
+
+    return !!wcscmp(wcFirmwareType, L"UEFI");
+}
+
+static PVOID memmem(const PVOID pHaystack, SIZE_T szHaystackLen, const PVOID pNeedle, SIZE_T szNeedleLen)
+{
+    if (!szNeedleLen || szHaystackLen < szNeedleLen)
+    {
+        return NULL;
+    }
+
+    for (PCHAR pcBegin = (PCHAR)pHaystack, pcLastPossible = (PCHAR)pHaystack + szHaystackLen - szNeedleLen;
+        pcBegin <= pcLastPossible;
+        ++pcBegin)
+    {
+        if (pcBegin[0] == ((PCHAR)pNeedle)[0] && !memcmp(&pcBegin[1], ((PCHAR)pNeedle + 1), szNeedleLen - 1))
+        {
+            return pcBegin;
+        }
+    }
+
+    return NULL;
+}
+
 
 LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
@@ -89,6 +195,19 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
     if (IsWin10OrLater())
     {
         SendDlgItemMessage(IDC_KDCOM, BM_SETCHECK, BST_CHECKED);
+    }
+
+    bool bRecommendWinloadPatch = false;
+    if (IsWinloadPatchApplicable(&bRecommendWinloadPatch))
+    {
+        if (bRecommendWinloadPatch)
+        {
+            SendDlgItemMessage(IDC_WINLOAD, BM_SETCHECK, BST_CHECKED);
+        }
+    }
+    else
+    {
+        GetDlgItem(IDC_WINLOAD).EnableWindow(FALSE);
     }
 
     SendDlgItemMessage(bAlreadyInstalled ? IDC_REUSEENTRY : IDC_NEWENTRY, BM_SETCHECK, BST_CHECKED);
@@ -168,7 +287,7 @@ ActionStatus TakeOwnership(LPTSTR lpszOwnFile);
 
 LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-    bool createNewEntry = false, setDefault = false, replaceKdcom = false;
+    bool createNewEntry = false, setDefault = false, replaceKdcom = false, patchWinLoad = false;
     String entryName, monitorLocation;
     unsigned timeout = -1;
 
@@ -177,6 +296,9 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 
     if (SendDlgItemMessage(IDC_KDCOM, BM_GETCHECK) == BST_CHECKED)
         replaceKdcom = true;
+
+    if (SendDlgItemMessage(IDC_WINLOAD, BM_GETCHECK) == BST_CHECKED)
+        patchWinLoad = true;
 
     if (SendDlgItemMessage(IDC_NEWENTRY, BM_GETCHECK) == BST_CHECKED)
     {
@@ -199,8 +321,153 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
     }
 #endif
 
+    if (patchWinLoad)
     {
-        String fp = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), replaceKdcom ? ConstString(_T("kdcom.dll")) : ConstString(_T("kdbazis.dll")));
+        String ext = IsLegacyBoot() ? L".exe" : L".efi";
+        String file = L"winload" + ext;
+        String fp = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), file);
+        String winloadBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), L"winload_old" + ext);
+
+        for (DWORD i = 2; File::Exists(winloadBackup); ++i)
+        {
+            String winloadBackupCurrentName;
+            winloadBackupCurrentName.AppendFormat(L"winload_old_%u.%ls", i, ext.c_str());
+            winloadBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), winloadBackupCurrentName);
+        }
+
+        ActionStatus st;
+        {
+            st = TakeOwnership(const_cast<LPTSTR>(String(fp).c_str()));
+            if (!st.Successful())
+            {
+                ::MessageBox(HWND_DESKTOP,
+                    String::sFormat(_T("Cannot replace owner on %s: %s"), file.c_str(), st.GetMostInformativeText().c_str()).c_str(),
+                    NULL,
+                    MB_ICONERROR);
+                return 0;
+            }
+
+            Win32::Security::TranslatedAcl dacl = File::GetDACLForPath(fp, &st);
+            if (!st.Successful())
+            {
+                ::MessageBox(HWND_DESKTOP,
+                    String::sFormat(_T("Cannot query permissions on %s: %s"), file.c_str(), st.GetMostInformativeText().c_str()).c_str(),
+                    NULL,
+                    MB_ICONERROR);
+                return 0;
+            }
+            dacl.AddAllowingAce(STANDARD_RIGHTS_ALL | SPECIFIC_RIGHTS_ALL, BazisLib::Win32::Security::Sid::CurrentUserSid());
+            st = File::SetDACLForPath(fp, dacl);
+            if (!st.Successful())
+            {
+                ::MessageBox(HWND_DESKTOP,
+                    String::sFormat(_T("Cannot set permissions on %s: %s"), file.c_str(), st.GetMostInformativeText().c_str()).c_str(),
+                    NULL,
+                    MB_ICONERROR);
+                return 0;
+            }
+
+            if (!CopyFileW(fp.c_str(), winloadBackup.c_str(), TRUE))
+            {
+                ::MessageBox(HWND_DESKTOP,
+                    String::sFormat(_T("Cannot copy old %s: %s"), file.c_str(), MAKE_STATUS(ActionStatus::FromLastError()).GetMostInformativeText().c_str()).c_str(),
+                    NULL,
+                    MB_ICONERROR);
+                return 0;
+            }
+
+            {
+                BazisLib::Win32::MemoryMappedFile mmWinLoad(fp.c_str());
+
+                // 66 0F 6F 05 F6 7F 11 00       movdqa  xmm0, cs:__xmm@fffffffffffffffe0000000100000000
+                // 48 8D 45 F0                   lea     rax, [rbp+var_10]
+                // C7 44 24 30 11 00 00 00       mov     [rsp+50h+var_20], 11h
+                // 48 8D 4D 48                   lea     rcx, [rbp+arg_8]
+                // 48 89 44 24 28                mov     [rsp+50h+var_28], rax
+                // 83 64 24 20 00                and     [rsp+50h+var_30], 0
+                // F3 0F 7F 45 F0                movdqu  [rbp+var_10], xmm0
+                // E8 3E 65 02 00                call    BlMmAllocatePhysicalPagesInRange
+                // 85 C0                         test    eax, eax
+                // 0F 89 8C 00 00 00             jns     loc_1800A4B22
+
+                BYTE bAndMovDquCallNeedle[] = { 0x83, 0x64, 0x24, 0x20, 0x00, 0xf3, 0x0f, 0x7f, 0x45, 0xf0, 0xe8 };
+                PBYTE pbMovDquCallStart = (PBYTE)memmem(mmWinLoad, (SIZE_T)mmWinLoad.GetFileSize(), bAndMovDquCallNeedle, sizeof(bAndMovDquCallNeedle));
+                if (!pbMovDquCallStart)
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(L"Unable to find `movdqu, call` pattern in winload").c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+
+                SIZE_T szSizeRemaining = (SIZE_T)(mmWinLoad.GetFileSize() - (pbMovDquCallStart - (PBYTE)((PVOID)mmWinLoad)));
+                if (memmem(pbMovDquCallStart + 1, szSizeRemaining - 1, bAndMovDquCallNeedle, sizeof(bAndMovDquCallNeedle)))
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(L"Found multiple patterns in winload").c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+
+                BYTE bTestEaxEaxNeedle[] = { 0x85, 0xc0 };
+                PBYTE pbTestEaxEaxStart = (PBYTE)memmem(pbMovDquCallStart, 50, bTestEaxEaxNeedle, sizeof(bTestEaxEaxNeedle));
+                if (!pbTestEaxEaxStart)
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(L"Unable to find `test eax, eax` pattern in winload").c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+
+                if (*(pbTestEaxEaxStart - 5) != 0xe8)
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(L"Missing `call` pattern in winload").c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+
+                if (*(pbTestEaxEaxStart + 2) != 0x0f || *(pbTestEaxEaxStart + 3) != 0x89)
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(L"Missing `jns` pattern in winload").c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+
+                while (pbMovDquCallStart != pbTestEaxEaxStart + 8)
+                {
+                    *pbMovDquCallStart++ = 0x90;
+                }
+            }
+
+            {
+                DWORD dwOrigChecksum, dwNewChecksum;
+                if (MapFileAndCheckSumW(fp.c_str(), &dwOrigChecksum, &dwNewChecksum) != CHECKSUM_SUCCESS)
+                {
+                    ::MessageBox(HWND_DESKTOP,
+                        String::sFormat(L"Unable to recalculate winload checksum").c_str(),
+                        NULL,
+                        MB_ICONERROR);
+                    return 0;
+                }
+
+                BazisLib::Win32::MemoryMappedFile mmWinLoad(fp.c_str());
+                PIMAGE_DOS_HEADER pDOSHeader = (PIMAGE_DOS_HEADER)(PVOID)mmWinLoad;
+                PIMAGE_NT_HEADERS pNTHeader = (PIMAGE_NT_HEADERS)((PBYTE)((PVOID)mmWinLoad) + pDOSHeader->e_lfanew);
+                pNTHeader->OptionalHeader.CheckSum = dwNewChecksum;
+            }
+        }
+
+    }
+
+    {
+        String fp = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), replaceKdcom ? ConstString(L"kdcom.dll") : ConstString(L"kdbazis.dll"));
 
 #ifdef _WIN64
         bool is64Bit = true;
@@ -211,7 +478,6 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
         ActionStatus st;
 
         {
-            WOW64FSRedirHolder holder;
             if (replaceKdcom)
             {
                 String kdcomBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), L"kdcom_old.dll");
