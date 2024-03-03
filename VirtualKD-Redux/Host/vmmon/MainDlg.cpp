@@ -449,7 +449,7 @@ LRESULT CMainDlg::OnTimer(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, B
 static inline bool UpdateProcessStats(PatchedProcess &proc, unsigned PID, unsigned ProcessorCount)
 {
     HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE, FALSE, PID);
-    if (hProc == INVALID_HANDLE_VALUE)
+    if (!hProc)
     {
         proc.StillRunning = false;
         return false;
