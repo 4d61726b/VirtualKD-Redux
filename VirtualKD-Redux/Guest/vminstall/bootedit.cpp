@@ -93,13 +93,16 @@ namespace VistaBCD
 
             if (IsWin8OrLater())
             {
-                st = m_Object.SetElement((BCDElementType)0x250000c2, (ULONGLONG)0); //Enable old-style boot selection menu.
+                st = m_Object.SetElement(BcdOSLoaderInteger_BootMenuPolicy, (ULONGLONG)0); //Enable old-style boot selection menu.
                 if (!st.Successful())
                     return st;
                 st = m_Object.SetElement(BcdLibraryBoolean_AutoRecoveryEnabled, false);
                 if (!st.Successful())
                     return st;
                 st = m_Object.SetElement(BcdLibraryInteger_DebuggerType, (ULONGLONG)0); //Set DebuggerType to DebuggerSerial
+                if (!st.Successful())
+                    return st;
+                st = m_Object.SetElement(BcdLibraryString_DebuggerBusParameters, L"");
                 if (!st.Successful())
                     return st;
             }
