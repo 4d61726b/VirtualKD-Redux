@@ -6,5 +6,6 @@ IF EXIST %1 (
         exit 1
     )
 ) ELSE (
-    echo WARNING: Missing %1, skipping signtool
+    echo ERROR: Missing %1. Use gencerts.bat to generate certificates
+    exit 1
 )
