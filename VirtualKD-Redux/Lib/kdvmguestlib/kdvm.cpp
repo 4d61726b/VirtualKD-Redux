@@ -56,8 +56,47 @@ ULONG KdVMGetActiveCallCount()
     return KdVmActiveCallCount;
 }
 
-extern "C" NTSYSAPI PIMAGE_NT_HEADERS NTAPI RtlImageNtHeader(IN PVOID ModuleAddress);
-#include <ntimage.h>
+static PIMAGE_NT_HEADERS ImageNtHeader(PVOID pModuleAddress)
+{
+    PIMAGE_NT_HEADERS pNtHeaders = NULL;
+    PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)pModuleAddress;
+
+    __try
+    {
+        if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE)
+        {
+            __leave;
+        }
+
+        PIMAGE_NT_HEADERS pNtHeadersTmp = (PIMAGE_NT_HEADERS)((PUCHAR)pModuleAddress + pDosHeader->e_lfanew);
+        if (pNtHeadersTmp->Signature != IMAGE_NT_SIGNATURE ||
+            pNtHeadersTmp->OptionalHeader.Magic !=
+#ifdef _WIN64
+            IMAGE_NT_OPTIONAL_HDR64_MAGIC
+#else
+            IMAGE_NT_OPTIONAL_HDR32_MAGIC
+#endif
+            ||
+            pNtHeadersTmp->FileHeader.Machine !=
+#ifdef _WIN64
+            IMAGE_FILE_MACHINE_AMD64
+#else
+            IMAGE_FILE_MACHINE_I386
+#endif
+            )
+        {
+            __leave;
+        }
+
+        pNtHeaders = pNtHeadersTmp;
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+    }
+
+    return pNtHeaders;
+}
+
 static PVOID GetModuleBaseAddress(PVOID pAddr)
 {
     CHAR* pBase = (char*)(((ULONG_PTR)(void*)pAddr / PAGE_SIZE) * PAGE_SIZE);
@@ -72,7 +111,7 @@ static PVOID GetModuleBaseAddress(PVOID pAddr)
                 continue;
             }
 
-            PIMAGE_NT_HEADERS pHeaders = RtlImageNtHeader(pCurAddr);
+            PIMAGE_NT_HEADERS pHeaders = ImageNtHeader(pCurAddr);
             if (pHeaders)
             {
                 return pCurAddr;
@@ -470,7 +509,7 @@ NTSTATUS __stdcall KdDebuggerInitialize0(PVOID lpLoaderParameterBlock)
     NTSTATUS st;
 
     PVOID pAddr = GetModuleBaseAddress(KdDebuggerInitialize0);
-    PIMAGE_NT_HEADERS pHeaders = RtlImageNtHeader(pAddr);
+    PIMAGE_NT_HEADERS pHeaders = ImageNtHeader(pAddr);
     if (pHeaders)
     {
         //Prevent the current module from being relocated to a different address and breaking the physical/virtual address mapping

@@ -14,8 +14,8 @@ REM copy Build\Win32\Release\kdpatch.reg Bundles\ReleaseBundle\target32
 REM copy Build\x64\Release\kdpatch.reg Bundles\ReleaseBundle\target64
 copy Build\Win32\Release\vminstall.exe Bundles\ReleaseBundle\target32
 copy Build\x64\Release\vminstall.exe Bundles\ReleaseBundle\target64
-copy Build\Win32\Release\kdbazis.dll Bundles\ReleaseBundle\target32
-copy Build\x64\Release\kdbazis.dll Bundles\ReleaseBundle\target64
+copy Build\Win32\Release\kdbazis.dll Bundles\ReleaseBundle\target32\kdcom.dll
+copy Build\x64\Release\kdbazis.dll Bundles\ReleaseBundle\target64\kdcom.dll
 REM copy Build\Win32\Release\kdpatch.sys Bundles\ReleaseBundle\target32
 REM copy Build\x64\Release\kdpatch.sys Bundles\ReleaseBundle\target64
 copy Certs\VKD-Redux_CA.cer Bundles\ReleaseBundle\
@@ -34,8 +34,8 @@ REM copy Build\Win32\Debug\kdpatch.reg Bundles\DebugBundle\target32
 REM copy Build\x64\Debug\kdpatch.reg Bundles\DebugBundle\target64
 copy Build\Win32\Debug\vminstall.exe Bundles\DebugBundle\target32
 copy Build\x64\Debug\vminstall.exe Bundles\DebugBundle\target64
-copy Build\Win32\Debug\kdbazis.dll Bundles\DebugBundle\target32
-copy Build\x64\Debug\kdbazis.dll Bundles\DebugBundle\target64
+copy Build\Win32\Debug\kdbazis.dll Bundles\DebugBundle\target32\kdcom.dll
+copy Build\x64\Debug\kdbazis.dll Bundles\DebugBundle\target64\kdcom.dll
 REM copy Build\Win32\Debug\kdpatch.sys Bundles\DebugBundle\target32
 REM copy Build\x64\Debug\kdpatch.sys Bundles\DebugBundle\target64
 copy Certs\VKD-Redux_CA.cer Bundles\DebugBundle\
