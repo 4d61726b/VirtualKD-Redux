@@ -1,10 +1,10 @@
 # VirtualKD-Redux Tutorial
 
-## Guest VM
+## Guest VM (Windows)
 
 ![](TutorialGuest.gif)
 
-1. Copy the target folder to the guest VM running inside VMware Workstation. If the Guest VM is running a 32-bit OS, copy "target32". Otherwise, if it's running a 64-bit OS, then copy "target64" instead.
+1. Copy the target folder to the guest VM running inside VMware Workstation or VirtualBox. If the Guest VM is running a 32-bit OS, copy "target32". Otherwise, if it's running a 64-bit OS, then copy "target64" instead.
 
 2. Run "vminstall.exe" in the guest VM. If using Windows 10, ensure that "Replace kdcom.dll" is checked. Once the installer is complete, allow the guest VM to restart.
 
@@ -13,6 +13,20 @@
 4. Select "Disable Driver Signature Enforcement" and boot the OS.
 
 :bulb: You can use virtual machine snapshots to avoid having to perform these steps every time. Once the final step is completed and the OS has successfully booted, make a snapshot that can later be restored. **It is important to note that if a newer version of VirtualKD-Redux is installed on the host, then the guest VM must also be updated and vice versa. It is strongly recommended to make a new snapshot after upgrading and rebooting the guest VM.**
+
+## Guest VM (ReactOS)
+
+This is only applicable if you are using ReactOS and not Windows in your guest VM.
+
+1. Download and install the "MSVC Debug" version of ReactOS in your guest VM.
+
+2. Copy the target folder to the guest VM running inside VMware Workstation or VirtualBox. If the Guest VM is running a 32-bit OS, copy "target32". Otherwise, if it's running a 64-bit OS, then copy "target64" instead.
+
+3. Copy "kdcom.dll" from the target folder into the "system32" folder of your ReactOS installation. This should overwrite the existing "kdcom.dll" that was part of the ReactOS installation.
+
+4. Reboot the guest VM.
+
+5. At the boot manager prompt, select the "ReactOS (Debug)" entry.
 
 ## Host (VirtualBox ONLY)
 
@@ -28,7 +42,7 @@ The latest version of VirtualBox is hardened and requires kdclient to be signed 
 
 ![](TutorialHost.gif)
 
-1. If your host OS is a 64-bit machine run "vmmon64.exe". Otherwise, if it's running a 32-bit OS, instead run "vmmon32.exe".
+1. Run "vmmon64.exe" on your host OS.
 
 2. If this is your first time running VirtualKD-Redux, ensure that the "Debugger path" is properly set. This can be the path to "windbg.exe" installed on your system.
 

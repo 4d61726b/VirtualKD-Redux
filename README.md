@@ -6,6 +6,7 @@
 * Support for the latest VMware Workstation Pro
 * Support for the latest VirtualBox
 * Support starting with Windows XP up to the latest Windows 11
+* Support for ReactOS
 * Support for the latest [WinDbg Preview](https://www.microsoft.com/en-us/p/windbg-preview/9pgjgd53tn86)
 * Toolchain modernization. Builds with Visual Studio 2022
 * Simplified build system. No additional libraries required
