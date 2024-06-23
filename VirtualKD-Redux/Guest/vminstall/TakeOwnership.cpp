@@ -8,9 +8,9 @@
 
 using namespace BazisLib;
 
-ActionStatus SetPrivilege(
+static ActionStatus SetPrivilege(
     HANDLE hToken,          // access token handle
-    LPCTSTR lpszPrivilege,  // name of privilege to enable/disable
+    LPCWSTR lpszPrivilege,  // name of privilege to enable/disable
     BOOL bEnablePrivilege   // to enable or disable privilege
 )
 {
@@ -54,7 +54,7 @@ ActionStatus SetPrivilege(
 }
 
 
-ActionStatus TakeOwnership(LPTSTR lpszOwnFile)
+ActionStatus TakeOwnership(LPWSTR lpszOwnFile)
 {
     HANDLE hToken = NULL;
     DWORD dwRes;

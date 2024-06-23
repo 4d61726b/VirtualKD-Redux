@@ -10,6 +10,7 @@
 
 #include "MainDlg.h"
 #include "install.h"
+#include "TakeOwnership.h"
 #include <BazisLib/bzscore/Win32/security.h>
 #include <BazisLib/bzscore/file.h>
 #include <BazisLib/bzshlp/Win32/wow64.h>
@@ -20,112 +21,6 @@
 
 using namespace BazisLib;
 using namespace BootEditor;
-
-static OSVERSIONINFOEXW GetOSVersion()
-{
-    typedef void (WINAPI* RtlGetVersion)(OSVERSIONINFOEXW*);
-    OSVERSIONINFOEXW info = { 0 };
-    info.dwOSVersionInfoSize = sizeof(info);
-    ((RtlGetVersion)GetProcAddress(GetModuleHandleW(L"ntdll"), "RtlGetVersion"))(&info);
-    return info;
-}
-
-bool IsVistaOrLater()
-{
-    OSVERSIONINFOEXW info = GetOSVersion();
-    return info.dwMajorVersion >= 6;
-}
-
-bool IsWin8OrLater()
-{
-    OSVERSIONINFOEXW info = GetOSVersion();
-    if (info.dwMajorVersion > 6)
-    {
-        return true;
-    }
-    else if (info.dwMajorVersion == 6)
-    {
-        return info.dwMinorVersion >= 2;
-    }
-
-    return false;
-}
-
-bool IsWin10OrLater()
-{
-    OSVERSIONINFOEXW info = GetOSVersion();
-    return info.dwMajorVersion >= 10;
-}
-
-bool IsWin11OrLater()
-{
-    OSVERSIONINFOEXW info = GetOSVersion();
-
-    if (info.dwMajorVersion > 10)
-    {
-        return true;
-    }
-    else if (info.dwMajorVersion < 10)
-    {
-        return false;
-    }
-
-    return info.dwBuildNumber >= 22000;
-}
-
-static bool IsRunningVMWareHypervisor()
-{
-    RegistryKey key(HKEY_LOCAL_MACHINE, L"HARDWARE\\DESCRIPTION\\System\\BIOS");
-    if (!key.Valid())
-    {
-        return false;
-    }
-
-    String strBIOSVersion;
-    if (!key[L"BIOSVersion"].ReadValue(&strBIOSVersion).Successful())
-    {
-        return false;
-    }
-
-    return strBIOSVersion.compare(0, _countof(L"VMW") - 1, L"VMW") == 0;
-}
-
-static bool IsWinloadPatchApplicable(bool* pbRecommendWinloadPatch)
-{
-    *pbRecommendWinloadPatch = false;
-
-#ifdef _WIN64
-    if (!IsWin11OrLater())
-    {
-        return false;
-    }
-
-    *pbRecommendWinloadPatch = !IsRunningVMWareHypervisor();
-
-    return true;
-#else
-    return false;
-#endif
-}
-
-static bool IsLegacyBoot()
-{
-    OSVERSIONINFOEXW info = GetOSVersion();
-
-    if (info.dwMajorVersion < 6 ||
-       (info.dwMajorVersion == 6 && info.dwMinorVersion == 0 && info.wServicePackMajor == 0))
-    {
-        return true;
-    }
-    
-    WCHAR wcFirmwareType[_countof("UEFI")];
-    if (!GetEnvironmentVariableW(L"%FIRMWARE_TYPE%", wcFirmwareType, sizeof(wcFirmwareType)))
-    {
-        return false;
-    }
-
-    return !!wcscmp(wcFirmwareType, L"UEFI");
-}
 
 static PVOID memmem(const PVOID pHaystack, SIZE_T szHaystackLen, const PVOID pNeedle, SIZE_T szNeedleLen)
 {
@@ -253,37 +148,6 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
     return TRUE;
 }
-
-static ActionStatus SaveResourceToFile(const String &filePath, LPCTSTR lpResType, DWORD dwID)
-{
-    HMODULE hModule = GetModuleHandle(NULL);
-    HRSRC hRes = FindResource(hModule, MAKEINTRESOURCE(dwID), lpResType);
-    if (!hRes)
-        return MAKE_STATUS(ActionStatus::FailFromLastError());
-
-    DWORD len = SizeofResource(hModule, hRes);
-    if (!len)
-        return MAKE_STATUS(ActionStatus::FailFromLastError());
-
-    HGLOBAL hResObj = LoadResource(hModule, hRes);
-    if (!hResObj)
-        return MAKE_STATUS(ActionStatus::FailFromLastError());
-
-    PVOID p = LockResource(hResObj);
-    if (!p)
-        return MAKE_STATUS(ActionStatus::FailFromLastError());
-
-    ActionStatus st;
-    File file(filePath, FileModes::CreateOrTruncateRW, &st);
-    if (!st.Successful())
-        return st;
-    file.Write(p, len, &st);
-    if (!st.Successful())
-        return st;
-    return MAKE_STATUS(Success);
-}
-
-ActionStatus TakeOwnership(LPTSTR lpszOwnFile);
 
 LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
@@ -466,107 +330,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
 
     }
 
-    {
-        String fp = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), replaceKdcom ? ConstString(L"kdcom.dll") : ConstString(L"kdbazis.dll"));
-
-#ifdef _WIN64
-        bool is64Bit = true;
-#else
-        bool is64Bit = BazisLib::WOW64APIProvider::sIsWow64Process();
-#endif
-
-        ActionStatus st;
-
-        {
-            if (replaceKdcom)
-            {
-                String kdcomBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), L"kdcom_old.dll");
-
-                for (DWORD i = 2; File::Exists(kdcomBackup); ++i)
-                {
-                    String kdcomBackupCurrentName;
-                    kdcomBackupCurrentName.AppendFormat(L"kdcom_old_%u.dll", i);
-                    kdcomBackup = Path::Combine(Path::GetSpecialDirectoryLocation(dirSystem), kdcomBackupCurrentName);
-                }
-
-                st = TakeOwnership(const_cast<LPTSTR>(String(fp).c_str()));
-                if (!st.Successful())
-                {
-                    ::MessageBox(HWND_DESKTOP,
-                        String::sFormat(_T("Cannot replace owner on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                        NULL,
-                        MB_ICONERROR);
-                    return 0;
-                }
-
-                Win32::Security::TranslatedAcl dacl = File::GetDACLForPath(fp, &st);
-                if (!st.Successful())
-                {
-                    ::MessageBox(HWND_DESKTOP,
-                        String::sFormat(_T("Cannot query permissions on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                        NULL,
-                        MB_ICONERROR);
-                    return 0;
-                }
-                dacl.AddAllowingAce(STANDARD_RIGHTS_ALL | SPECIFIC_RIGHTS_ALL, BazisLib::Win32::Security::Sid::CurrentUserSid());
-                st = File::SetDACLForPath(fp, dacl);
-                if (!st.Successful())
-                {
-                    ::MessageBox(HWND_DESKTOP,
-                        String::sFormat(_T("Cannot set permissions on kdcom.dll: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                        NULL,
-                        MB_ICONERROR);
-                    return 0;
-                }
-
-                if (!MoveFile(fp.c_str(), kdcomBackup.c_str()))
-                {
-                    ::MessageBox(HWND_DESKTOP,
-                        String::sFormat(_T("Cannot rename old kdcom.dll: %s"), MAKE_STATUS(ActionStatus::FromLastError()).GetMostInformativeText().c_str()).c_str(),
-                        NULL,
-                        MB_ICONERROR);
-                    return 0;
-                }
-            }
-            st = SaveResourceToFile(fp, _T("KDVMDLL"), IDR_KDVM);
-        }
-        if (!st.Successful())
-        {
-            ::MessageBox(HWND_DESKTOP,
-                String::sFormat(_T("Cannot create KDBAZIS.DLL: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                NULL,
-                MB_ICONERROR);
-            return 0;
-        }
-
-        if (!monitorLocation.empty())
-        {
-            HWND hMonitor = FindWindow(NULL, _T("DDKLaunchMonitor"));
-            if (hMonitor)
-            {
-                ::SendMessage(hMonitor, WM_CLOSE, 0, 0);
-                Sleep(1000);
-            }
-
-            fp = monitorLocation;
-            fp = Path::Combine(fp, _T("DDKLaunchMonitor.exe"));
-
-            WOW64FSRedirHolder holder;
-            st = SaveResourceToFile(fp, _T("VDDKMON"), is64Bit ? IDR_VDDKMON64 : IDR_VDDKMON32);
-
-            RegistryKey key(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"));
-            key[_T("DDKLaunchMonitor")] = fp.c_str();
-
-            if (!st.Successful())
-            {
-                ::MessageBox(HWND_DESKTOP,
-                    String::sFormat(_T("Cannot create DDKLaunchMonitor.exe: %s"), st.GetMostInformativeText().c_str()).c_str(),
-                    NULL,
-                    MB_ICONERROR);
-                return 0;
-            }
-        }
-    }
+    DeployKdCom(replaceKdcom, monitorLocation);
 
     ActionStatus st = CreateVirtualKDBootEntry(createNewEntry, setDefault, entryName.c_str(), timeout, replaceKdcom);
     if (!st.Successful())
@@ -592,7 +356,7 @@ LRESULT CMainDlg::OnOK(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /
             {
                 MessageBox(_T("Warning: You will have to disable driver signature enforcement MANUALLY at every boot to use VirtualKD-Redux! Please refer to https://git.io/JelPr for more details!"), _T("Warning"), MB_ICONWARNING);
             }
-            if (MessageBox(_T("VirtualKD-Redux was successfully installed. Please do not forget to run VMMON.EXE on the host machine, or use VisualDDK for debugging.\r\nDo you want to restart your computer now?"),
+            if (MessageBox(_T("VirtualKD-Redux was successfully installed. Please do not forget to run vmmmon64.exe on the host machine, or use VisualDDK for debugging.\r\nDo you want to restart your computer now?"),
                 _T("Question"),
                 MB_ICONQUESTION | MB_YESNO) == IDYES)
                 doReboot = true;

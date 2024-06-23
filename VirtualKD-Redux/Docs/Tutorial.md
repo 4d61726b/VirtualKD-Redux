@@ -22,7 +22,7 @@ This is only applicable if you are using ReactOS and not Windows in your guest V
 
 2. Copy the target folder to the guest VM running inside VMware Workstation or VirtualBox. If the Guest VM is running a 32-bit OS, copy "target32". Otherwise, if it's running a 64-bit OS, then copy "target64" instead.
 
-3. Copy "kdcom.dll" from the target folder into the "system32" folder of your ReactOS installation. This should overwrite the existing "kdcom.dll" that was part of the ReactOS installation.
+3. Run "vminstall.exe" in the guest VM.
 
 4. Reboot the guest VM.
 

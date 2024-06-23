@@ -6,11 +6,6 @@
 
 #include <BazisLib/bzscore/string.h>
 
-bool IsVistaOrLater();
-bool IsWin8OrLater();
-bool IsWin10OrLater();
-bool IsWin11OrLater();
-
 class CMainDlg : public CDialogImpl<CMainDlg>
 {
 private:
